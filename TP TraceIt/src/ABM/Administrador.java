@@ -1,37 +1,28 @@
 package ABM;
 
+import java.util.HashMap;
+
 public class Administrador extends Usuario{
-    ListaAdministradores listaAdministradores;
-    ListaClientes listaClientes;
+
 
 
     public Administrador(String nombre){
         super(nombre);
         tipoUsuario = "administrador";
-        listaAdministradores = new ListaAdministradores();
-        listaClientes = new ListaClientes();
+
 
     }
 
-    public void addAdministrador(Administrador administrador, ListaAdministradores listaAdministradores) {
-        listaAdministradores.addAdministrador(administrador);
+
+
+    public void bloquearCiudadano(Ciudadano cliente, HashMap<Integer,Ciudadano> listaCiudadanos){
+        if (listaCiudadanos.containsKey(cliente.getNumeroTelefono()))
+            cliente.habilitado = false;
     }
 
-    public void removeAdministrador(Administrador administrador, ListaAdministradores listaAdministradores){
-        for (int i = 0; i < listaAdministradores.getAdministradores().size(); i++) {
-            if (listaAdministradores.getAdministradores().get(i).getNombreUsuario().equalsIgnoreCase(administrador.getNombreUsuario()))
-                listaAdministradores.removeAdministrador(administrador);
-        }
-    }
-
-    public void bloquearCiudadano(Ciudadano cliente, ListaClientes listaClientes){
-        if (listaClientes.getHash().containsKey(cliente.getNumeroTelefono()))
-            cliente.bloquear();
-    }
-
-    public void desbloquarCiudadano(Ciudadano cliente, ListaClientes listaClientes){
-        if (listaClientes.getHash().containsKey(cliente.getNumeroTelefono()))
-            cliente.desbloquear();
+    public void desbloquarCiudadano(Ciudadano cliente,HashMap<Integer,Ciudadano> listaCiudadanos){
+        if (listaCiudadanos.containsKey(cliente.getNumeroTelefono()))
+            cliente.habilitado = true;
     }
 
 

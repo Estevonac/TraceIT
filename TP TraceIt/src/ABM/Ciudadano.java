@@ -8,11 +8,12 @@ import java.util.List;
 
 public class Ciudadano extends Usuario {
 
-        private boolean habilitado;
+        public boolean habilitado;
         int solicitudesCounter;
         int numeroTelefono;
         String cuil;
-        ArrayList<Evento> sintomas;
+        ArrayList<String> sintomas;
+        ArrayList<Ciudadano> contactos;
 
         public Ciudadano(String cuil, int numeroTelefono) {
             super(cuil);
@@ -21,6 +22,7 @@ public class Ciudadano extends Usuario {
             habilitado = true;
             solicitudesCounter = 0;
             sintomas = new ArrayList<>();
+            contactos = new ArrayList<>();
         }
 
 
@@ -31,51 +33,36 @@ public class Ciudadano extends Usuario {
         public String getCuil() {
             return cuil;
         }
-        public void bloquear() {
-            habilitado = false;
-        }
-
-        public void desbloquear() {
-            habilitado = true;
-        }
 
         public boolean getHabilitado() {
             return habilitado;
         }
 
 
-    public boolean tuvoContacto(String cuil, Date fechaDesde, Date fechaHasta){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+    public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
                  /*if (){                                                         // Si la respuesta es no. Contador ++. if contador = 5 usuario bloqeuado
 
 
                  }
                  else{
                      solicitudesCounter++;
-                     return false;
+
+                     if(solicitudesCounter==5){
+                     habilitado = false;
+                     }
                  }*/
 
 
-            return true;
-    }
-    public boolean tuvoContacto(int numeroTelefono, Date fechaDesde, Date fechaHasta){
-
-        /*if (){
-
-
-        }
-        else{
-            solicitudesCounter++;
-            return false;
-        }*/
-            return true;
-    }
-
-    private  void presenciaSintomas(Evento unEvento){
-            sintomas.add(unEvento);
 
     }
-    private void eliminarSintoma(Evento unEvento){
-            sintomas.remove(unEvento);
+
+
+    private  void presenciaSintomas(Evento unEvento, String unSintoma){
+            sintomas.add(unSintoma);
+
+    }
+    private void eliminarSintoma(Evento unEvento, String unSintoma){
+            sintomas.remove(unSintoma);
 
 
 

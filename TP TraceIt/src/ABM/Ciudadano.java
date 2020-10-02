@@ -4,7 +4,7 @@ import Eventos.Evento;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
 
 public class Ciudadano extends Usuario {
 
@@ -42,7 +42,7 @@ public class Ciudadano extends Usuario {
     public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
                  /*if (){                                                         // Si la respuesta es no. Contador ++. if contador = 5 usuario bloqeuado
 
-
+  // Podemos tener un boolean que lo recibe unCiudadano y tiene que decir True si tuvo contacto con el otro ciudadano en tal fecha.
                  }
                  else{
                      solicitudesCounter++;

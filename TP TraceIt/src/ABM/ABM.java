@@ -2,9 +2,13 @@ package ABM;
 
 import java.util.HashMap;
 
-public class ABM {
+public class ABM extends Administrador{
     HashMap<String, Administrador> listaAdministradores;
     HashMap<Integer, Ciudadano> listaCiudadanos;
+
+    public ABM(String nombre) {
+        super(nombre);
+    }
 
 
     public void addAdministrador(Administrador administrador) {

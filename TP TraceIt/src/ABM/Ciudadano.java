@@ -1,24 +1,27 @@
 package ABM;
 
+import Eventos.Contacto;
 import Eventos.Evento;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 
-public class Ciudadano extends Usuario {
+public class Ciudadano{
 
-        public boolean habilitado;
-        int solicitudesCounter;
-        int numeroTelefono;
-        String cuil;
-        ArrayList<String> sintomas;
-        ArrayList<Ciudadano> contactos;
+    public boolean habilitado;
+    public boolean estaEnfermo;
+    int solicitudesCounter;
+    int numeroTelefono;
+    private final String cuil;
+    ArrayList<String> sintomas;
+    ArrayList<Ciudadano> contactos;
+
+
 
         public Ciudadano(String cuil, int numeroTelefono) {
-            super(cuil);
+            this.cuil = cuil;
             this.numeroTelefono = numeroTelefono;
-            tipoUsuario = "ciudadano";
             habilitado = true;
             solicitudesCounter = 0;
             sintomas = new ArrayList<>();
@@ -39,7 +42,22 @@ public class Ciudadano extends Usuario {
         }
 
 
-    public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+    public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta, String zona){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+
+            for (String s: unCiudadano.sintomas) {
+                for (String e: this.sintomas) {
+                    if (!s.equals(e)){
+                     this.presenciaSintomas(s);
+                 }
+                }
+             }
+                if ((!unCiudadano.estaEnfermo) && (!this.estaEnfermo)){
+
+
+                }
+        Contacto contacto = new Contacto(unCiudadano, zona,fechaDesde, fechaHasta, false);
+
+
                  /*if (){                                                         // Si la respuesta es no. Contador ++. if contador = 5 usuario bloqeuado
 
   // Podemos tener un boolean que lo recibe unCiudadano y tiene que decir True si tuvo contacto con el otro ciudadano en tal fecha.
@@ -56,15 +74,26 @@ public class Ciudadano extends Usuario {
 
     }
 
+    public boolean evaluarContacto(String respuesta){
 
-    private  void presenciaSintomas(Evento unEvento, String unSintoma){
+            if (respuesta.equals("true")){
+                return true;
+            }
+            else{return false;}
+
+    }
+
+
+    private  void presenciaSintomas(String unSintoma){
             sintomas.add(unSintoma);
 
     }
+
     private void eliminarSintoma(Evento unEvento, String unSintoma){
             sintomas.remove(unSintoma);
+    }
 
-
-
+    public ArrayList<String> mostrarSintomas(){
+            return sintomas;
     }
 }

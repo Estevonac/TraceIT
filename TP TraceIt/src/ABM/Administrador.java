@@ -2,13 +2,16 @@ package ABM;
 
 import java.util.HashMap;
 
-public class Administrador extends Usuario{
+public class Administrador{
+
+    private final String nombreUsuario;
+    private final String contrasena;
 
 
+    public Administrador(String nombreUsuario, String contrasena){
+        this.nombreUsuario = nombreUsuario;
+        this.contrasena = contrasena;
 
-    public Administrador(String nombre){
-        super(nombre);
-        tipoUsuario = "administrador";
 
 
     }
@@ -26,4 +29,7 @@ public class Administrador extends Usuario{
     }
 
 
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
 }

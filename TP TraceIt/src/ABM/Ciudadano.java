@@ -42,20 +42,22 @@ public class Ciudadano{
         }
 
 
-    public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta, String zona){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+    public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta, String zona, Evento unEvento){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
 
             for (String s: unCiudadano.sintomas) {
                 for (String e: this.sintomas) {
                     if (!s.equals(e)){
-                     this.presenciaSintomas(s);
+                     this.presenciaSintomas(s); // Ahora necesito que se reevalue si los ciudadanos estan enfermos.
                  }
                 }
              }
+                    unEvento.estaEnfermo(this);
+                    unEvento.estaEnfermo(unCiudadano);
                 if ((!unCiudadano.estaEnfermo) && (!this.estaEnfermo)){
-
+                    Contacto contacto = new Contacto(unCiudadano, zona,fechaDesde, fechaHasta, false);
 
                 }
-        Contacto contacto = new Contacto(unCiudadano, zona,fechaDesde, fechaHasta, false);
+
 
 
                  /*if (){                                                         // Si la respuesta es no. Contador ++. if contador = 5 usuario bloqeuado

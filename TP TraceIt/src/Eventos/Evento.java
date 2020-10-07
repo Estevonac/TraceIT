@@ -8,7 +8,7 @@ public class Evento {
 
     ArrayList<String> sintomasEnfermedad;
 
-    public Evento(){  // Esta enfermedad esta presente si se encuentran los siguientes sintomas
+    public Evento(){  // Esta enfermedad cuenta con los siguientes sintomas
                       // fiebre, tos, dolor muscular, falta de aire. Si por lo menos hay 2 se considerara enfermo.
         sintomasEnfermedad = new ArrayList<>();
 

@@ -3,8 +3,9 @@ package ABM;
 import Eventos.Contacto;
 import Eventos.Evento;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 
 public class Ciudadano{
@@ -24,6 +25,7 @@ public class Ciudadano{
             this.numeroTelefono = numeroTelefono;
             habilitado = true;
             solicitudesCounter = 0;
+            estaEnfermo = false;
             sintomas = new ArrayList<>();
             contactos = new ArrayList<>();
         }
@@ -42,25 +44,48 @@ public class Ciudadano{
         }
 
 
-    public void tuvoContacto(Ciudadano unCiudadano, Date fechaDesde, Date fechaHasta, String zona, Evento unEvento){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+        public boolean isEstaEnfermo(Evento unEvento){
+
+            int sintomasCounter = 0;
+            for (String s: this.mostrarSintomas()) {
+                for (String e: unEvento.sintomasEnfermedad) {
+                    if (s.equals(e)){
+                        sintomasCounter++;
+                    }
+                }
+
+            }
+            return this.estaEnfermo = sintomasCounter >= 2;
+        }
+
+    public void tuvoContacto(Ciudadano unCiudadano, LocalDateTime fechaDesde, LocalDateTime fechaHasta, String zona, Evento unEvento){ // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+
+            ArrayList<String> sintomasContacto = this.sintomas;
 
             for (String s: unCiudadano.sintomas) {
-                for (String e: this.sintomas) {
-                    if (!s.equals(e)){
-                     this.presenciaSintomas(s); // Ahora necesito que se reevalue si los ciudadanos estan enfermos.
-                 }
+                    if (!sintomasContacto.contains(s)){
+                        sintomasContacto.add(s);
+                    }
                 }
-             }
-                    unEvento.estaEnfermo(this);
-                    unEvento.estaEnfermo(unCiudadano);
-                if ((!unCiudadano.estaEnfermo) && (!this.estaEnfermo)){
+                //Anado los sintomas del contacto a ambos ciudadanos
+            this.sintomas = sintomasContacto;
+            unCiudadano.sintomas = sintomasContacto;
+            System.out.println("Sintomas despues del contagio:" + sintomasContacto);
+
+              // Ahora necesito que se reevalue si los ciudadanos estan enfermos.
+                    this.estaEnfermo = this.isEstaEnfermo(unEvento);
+                    unCiudadano.estaEnfermo = unCiudadano.isEstaEnfermo(unEvento);
+
+               if ((!unCiudadano.estaEnfermo) && (!this.estaEnfermo)){
                     Contacto contacto = new Contacto(unCiudadano, zona,fechaDesde, fechaHasta, false);
 
                 }
+               else{
+                   Contacto contacto = new Contacto(unCiudadano, zona,fechaDesde, fechaHasta, true);
+               }
 
 
-
-                 /*if (){                                                         // Si la respuesta es no. Contador ++. if contador = 5 usuario bloqeuado
+                 /*if (){   // Si la respuesta es no. Contador ++. if contador = 5 usuario bloqeuado
 
   // Podemos tener un boolean que lo recibe unCiudadano y tiene que decir True si tuvo contacto con el otro ciudadano en tal fecha.
                  }
@@ -78,15 +103,12 @@ public class Ciudadano{
 
     public boolean evaluarContacto(String respuesta){
 
-            if (respuesta.equals("true")){
-                return true;
-            }
-            else{return false;}
+        return respuesta.equals("true");
 
     }
 
 
-    private  void presenciaSintomas(String unSintoma){
+    public void presenciaSintomas(String unSintoma){
             sintomas.add(unSintoma);
 
     }

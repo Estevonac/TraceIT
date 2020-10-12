@@ -12,16 +12,14 @@ public class Administrador{
         this.nombreUsuario = nombreUsuario;
         this.contrasena = contrasena;
 
-
-
     }
 
 
 
-    public void bloquearCiudadano(Ciudadano cliente, HashMap<Integer,Ciudadano> listaCiudadanos){
+    /*public void bloquearCiudadano(Ciudadano cliente, HashMap<Integer,Ciudadano> listaCiudadanos){
         if (listaCiudadanos.containsKey(cliente.getNumeroTelefono()))
             cliente.habilitado = false;
-    }
+    }*/
 
     public void desbloquarCiudadano(Ciudadano cliente,HashMap<Integer,Ciudadano> listaCiudadanos){
         if (listaCiudadanos.containsKey(cliente.getNumeroTelefono()))

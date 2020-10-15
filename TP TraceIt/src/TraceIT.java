@@ -1,14 +1,16 @@
 import ABM.Administrador;
 import ABM.Ciudadano;
-import Eventos.Evento;
+import Eventos.Enfermedad;
+import Exceptions.InexistentUserException;
 import java.time.LocalDateTime;
 
 
-public class TraceIT {
+public class TraceIT{ //Test del programa
 
     public static void main(String[] args) {
+
 //Creamos una enfermedad y le pasamos los sintomas de esta
-        Evento covid = new Evento("Covid");
+        Enfermedad covid = new Enfermedad("Covid");
         covid.addSintomas("tos");
         covid.addSintomas("dolor muscular");
         covid.addSintomas("fiebre");
@@ -16,14 +18,14 @@ public class TraceIT {
 
 //Creamos usuarios
         Administrador juan = new Administrador("Juan", "admin123");
-        Ciudadano pedro = new Ciudadano("201234560",11223344);
-        Ciudadano julian = new Ciudadano("2044112250", 55667788);
+        Ciudadano pedro = new Ciudadano("201234560","11223344", "Pilar");
+        Ciudadano julian = new Ciudadano("2044112250", "55667788", "CABA");
 
 //Registramos los sintomas de cada usuario y mostramos el estado de si presentan la enfermedad antes creada
-        pedro.presenciaSintomas("tos");
-        pedro.presenciaSintomas("dolor muscular");
-        julian.presenciaSintomas("fiebre");
-        julian.presenciaSintomas("tos");
+        pedro.presenciaSintomas("tos",LocalDateTime.of(2020,10,9,12,30));
+        pedro.presenciaSintomas("dolor muscular",LocalDateTime.of(2020,10,9,12,30));
+        julian.presenciaSintomas("fiebre",LocalDateTime.of(2020,10,9,12,30));
+        julian.presenciaSintomas("tos",LocalDateTime.of(2020,10,9,12,30));
 
         pedro.mostrarSintomas();
         julian.mostrarSintomas();
@@ -32,7 +34,11 @@ public class TraceIT {
         System.out.println("Julian esta enfermo?: " + julian.estaEnfermo);
 
 // Generamos un contacto entre 2 ciudadanos, ahi tambien reevaluamos el estado de enfermedad y mostramos los nuevos sintomas
-        pedro.tuvoContacto(julian,LocalDateTime.of(2020,10,9,12,30),LocalDateTime.of(2020,10,9,14,30), "Pilar",covid); //El metodo no esta completo y no funciona adecuadamente todavia
+        try {
+            pedro.tuvoContacto(julian,LocalDateTime.of(2020,10,9,12,30),LocalDateTime.of(2020,10,9,14,30),covid); //El metodo no esta completo y no funciona adecuadamente todavia
+        } catch (InexistentUserException e) {
+            e.printStackTrace();
+        }
 
         pedro.mostrarSintomas();
         julian.mostrarSintomas();

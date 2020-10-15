@@ -1,11 +1,14 @@
 package ABM;
 
+import Eventos.Enfermedad;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Administrador{
 
-    private final String nombreUsuario;
-    private final String contrasena;
+    protected   String nombreUsuario;
+    protected   String contrasena;
 
 
     public Administrador(String nombreUsuario, String contrasena){
@@ -14,15 +17,14 @@ public class Administrador{
 
     }
 
+    public Enfermedad crearEnfermedad(String nombre){
+         return new Enfermedad(nombre);
+    }
 
 
-    /*public void bloquearCiudadano(Ciudadano cliente, HashMap<Integer,Ciudadano> listaCiudadanos){
-        if (listaCiudadanos.containsKey(cliente.getNumeroTelefono()))
-            cliente.habilitado = false;
-    }*/
 
-    public void desbloquarCiudadano(Ciudadano cliente,HashMap<Integer,Ciudadano> listaCiudadanos){
-        if (listaCiudadanos.containsKey(cliente.getNumeroTelefono()))
+    public void desbloquarCiudadano(Ciudadano cliente, ArrayList<Ciudadano> listaCiudadanos){
+        if (listaCiudadanos.contains(cliente.getNumeroTelefono()))
             cliente.habilitado = true;
     }
 

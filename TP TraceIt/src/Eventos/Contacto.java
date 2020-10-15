@@ -9,8 +9,8 @@ import java.util.Date;
 public class Contacto {
     public final boolean estanEnfermos;
 
-    public Contacto(Ciudadano unCiudadano, String zona, LocalDateTime fechaDesde, LocalDateTime fechaHasta, boolean estanEnfermos){
-
+    public Contacto(Ciudadano unCiudadano, Ciudadano otroCiudadano,String zona, LocalDateTime fechaDesde, LocalDateTime fechaHasta, boolean estanEnfermos){
+// Una vez aceptado el encuentro aca se evalua el contacto (Extraer metodo de tuvoContacto)
         this.estanEnfermos = estanEnfermos;
 
 

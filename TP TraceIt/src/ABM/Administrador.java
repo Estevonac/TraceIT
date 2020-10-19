@@ -1,9 +1,10 @@
 package ABM;
 
 import Eventos.Enfermedad;
-
+import Exceptions.IllegalConditionsException;
+import Exceptions.InexistentUserException;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 public class Administrador{
 
@@ -23,9 +24,12 @@ public class Administrador{
 
 
 
-    public void desbloquarCiudadano(Ciudadano cliente, ArrayList<Ciudadano> listaCiudadanos){
-        if (listaCiudadanos.contains(cliente.getNumeroTelefono()))
-            cliente.habilitado = true;
+    public void desbloquarCiudadano(Ciudadano unCiudadano) throws IllegalConditionsException { // podria tambien chequear que exista el ciudadano
+        if (!unCiudadano.habilitado) {
+            unCiudadano.habilitado = true;
+            unCiudadano.solicitudesCounter = 0; // Al desbloquarlo le reseteamos sus solicitudes.
+        }
+        else {throw new IllegalConditionsException("El ciudadano ya esta desbloqueado");}
     }
 
 

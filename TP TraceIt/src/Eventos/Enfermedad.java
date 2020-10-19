@@ -1,11 +1,12 @@
 package Eventos;
 
-import ABM.Ciudadano;
-
 import java.util.ArrayList;
 
 public class Enfermedad {
 
+    /*
+    Probar de implementar distintos tipos de sintomas. Sintomas contagiables y no contagiables.
+     */
     private final String nombre;
     public ArrayList<String> sintomasEnfermedad;
 
@@ -23,5 +24,7 @@ public class Enfermedad {
         return nombre;
     }
 
-
+    public ArrayList<String> mostrarSintomas(){
+        return sintomasEnfermedad;
+    }
 }

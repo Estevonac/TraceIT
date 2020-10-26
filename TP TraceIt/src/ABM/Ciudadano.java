@@ -1,11 +1,10 @@
 package ABM;
 
-import Eventos.Encuentro;
 import Eventos.Enfermedad;
 import Eventos.SolicitudEncuentro;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
-import java.time.LocalDateTime;
+import Persistencia.Fecha;
 import java.util.ArrayList;
 
 public class Ciudadano{
@@ -16,7 +15,7 @@ public class Ciudadano{
     final String numeroTelefono;
     private final String cuil;
     ArrayList<String> sintomas;
-    public ArrayList<SolicitudEncuentro> solicitudesRecibidas;
+    public ArrayList<SolicitudEncuentro> solicitudesRecibidas, proximosEncuentros;
     private final String zona;
 
 
@@ -47,7 +46,7 @@ public class Ciudadano{
 
 
 
-    public boolean isEstaEnfermo(){ // Evalua si el ciudadano esta enfermo.
+    public boolean estaEnfermo(){ // Evalua si el ciudadano esta enfermo.
         return estaEnfermo;
     }
 
@@ -71,12 +70,22 @@ public class Ciudadano{
 
     }
 
-    public void tieneContacto(ArrayList<Ciudadano> participantes, LocalDateTime fechaDesde, LocalDateTime fechaHasta, Enfermedad unEnfermedad) throws InexistentUserException { // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+    public void solicitarContacto(ArrayList<Ciudadano> participantes, Fecha fechaDesde, Fecha fechaHasta,String zona) throws InexistentUserException { // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
 
-        SolicitudEncuentro unEncuentro = new SolicitudEncuentro(this,participantes,fechaDesde,fechaHasta); // Reestructurar y extraer metodo en clase SolicitudEncuentro
-            if (unEncuentro.estado = true) {     //Evaluar el estado de la solicitud y pasarselo a Encuentro para evaluar el metodo
-                ArrayList<String> sintomasContacto = this.sintomas;
-                for (Ciudadano unCiudadano: participantes) {
+        SolicitudEncuentro unEncuentro = new SolicitudEncuentro(this,participantes,fechaDesde,fechaHasta,zona); // Reestructurar y extraer metodo en clase SolicitudEncuentro
+    unEncuentro.enviarSolicitudes();
+    }
+    public void solicitarContacto(Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta,String zona) throws InexistentUserException { // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+
+        SolicitudEncuentro unEncuentro = new SolicitudEncuentro(this,unCiudadano,fechaDesde,fechaHasta,zona); // Reestructurar y extraer metodo en clase SolicitudEncuentro
+
+    }
+
+    public boolean evaluarContacto(SolicitudEncuentro unEncuentro){ //Como hacemos para que se llame cuando un ciudadano dice
+                                                                                        //tener un encuentro con otro
+        if (unEncuentro.estado = true) {     //Evaluar el estado de la solicitud y pasarselo a Encuentro para evaluar el metodo
+            ArrayList<String> sintomasContacto = this.sintomas;
+            for (Ciudadano unCiudadano: unEncuentro.getParticipantesConfirmados()) {
 
 
                 for (String s : unCiudadano.sintomas) { // Arreglar para que funcione con multiples ciudadanos
@@ -92,8 +101,8 @@ public class Ciudadano{
                 System.out.println("Sintomas despues del contagio:" + sintomasContacto);
 
                 // Ahora necesito que se reevalue si los ciudadanos estan enfermos.
-                this.estaEnfermo = this.isEstaEnfermo();
-                unCiudadano.estaEnfermo = unCiudadano.isEstaEnfermo();
+                this.estaEnfermo = this.estaEnfermo();
+                unCiudadano.estaEnfermo = unCiudadano.estaEnfermo();
 
                 /*if ((!unCiudadano.estaEnfermo) && (!this.estaEnfermo)) { // Crear encuentros
                     Encuentro encuentro = new Encuentro(unCiudadano, this, zona, fechaDesde, fechaHasta);
@@ -102,29 +111,21 @@ public class Ciudadano{
                     Encuentro encuentro = new Encuentro(unCiudadano, this, zona, fechaDesde, fechaHasta);
                     solicitudesCounter++;
                 }*/
-                }
             }
-            unEncuentro = null; // Eliminar la solicitud creada antes. Preferentenmente
-    }
-
-    public boolean evaluarContacto(String respuesta, SolicitudEncuentro unEncuentro){ //Como hacemos para que se llame cuando un ciudadano dice
-                                                                                        //tener un encuentro con otro
-        unEncuentro.estado = respuesta.equals("true");
-
-
-        return unEncuentro.estado;
-
+        }
+        unEncuentro = null; // Eliminar la solicitud creada antes. Preferentenmente
+        return  true;
     }
 
 
 
-    public void presenciaSintomas(String unSintoma, LocalDateTime fechaSintoma){  // Anade sintomas a un ciudadano Necesitamos fecha??
-            sintomas.add(unSintoma);
+    public void presenciaSintomas(String unSintoma, Fecha fechaSintoma){  // Anade sintomas a un ciudadano Necesitamos fecha??
+            sintomas.add(unSintoma); // que pasa si hay un sintoma duplicado. Conservar el mas reciente.
 
 
     }
 
-    private void eliminarSintoma(String unSintoma, LocalDateTime fechaFin){ // Elimina sintomas a un ciudadano
+    private void eliminarSintoma(String unSintoma, Fecha fechaFin){ // Elimina sintomas a un ciudadano
             sintomas.remove(unSintoma);
     }
 
@@ -139,6 +140,8 @@ public class Ciudadano{
         for(SolicitudEncuentro solicitud : solicitudesRecibidas) { // loopear y buscar solicitud sino exception
             if (solicitud.equals(unaSolicitud)){
                 solicitud.estado = true;
+                solicitudesRecibidas.remove(solicitud); // La elimino de mi lista de solicitudes
+                proximosEncuentros.add(solicitud);
             }
         }
     }
@@ -154,8 +157,10 @@ public class Ciudadano{
             for(SolicitudEncuentro solicitud : solicitudesRecibidas) { // loopear y buscar solicitud sino exception
                 if (solicitud.equals(unaSolicitud)){
                     solicitud.estado = false;
+                    solicitud.getParticipantes().remove(this); // Lo sacamos a este ciudadano de la lista de participantes.
+                    solicitudesRecibidas.remove(solicitud);
                 }
-            } // Hay que ver que cuando aceptamos o rechazamos las solicitudes estas tienen que desaparecer de la lista de solicitudes
+            }
         }
         else{
             throw new InvalidDataException("No hay ninguna solicitud de encuentro");
@@ -163,13 +168,16 @@ public class Ciudadano{
         }
     }
 
-    public ArrayList<SolicitudEncuentro> mostrarSolicitudes(){
+    public ArrayList<SolicitudEncuentro> mostrarSolicitudesRecibidas(){
         return solicitudesRecibidas;
     }
+
+    public ArrayList<SolicitudEncuentro> mostrarEventosProximos(){return proximosEncuentros;}
 
     public boolean getEstadoSolicitud(SolicitudEncuentro unaSolicitud){
         return unaSolicitud.estado;
     }
+
 }
 
 

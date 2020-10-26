@@ -13,6 +13,7 @@ public class ABM {
 
     public ABM(){
         this.listaAdministradores = new ArrayList<>();
+        this.listaCiudadanos = new ArrayList<>();
 
     }
 
@@ -44,7 +45,7 @@ public class ABM {
         if (listaAdministradores.contains(unAdmin)){
             for (Administrador a: listaAdministradores) {
                 if (a == unAdmin){
-                    a.contrasena = nuevaContrasena;
+                    a.setContrasena(nuevaContrasena);
                 }
 
             }

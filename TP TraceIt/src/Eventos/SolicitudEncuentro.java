@@ -1,9 +1,7 @@
 package Eventos;
 
 import ABM.Ciudadano;
-
-
-import java.time.LocalDateTime;
+import Persistencia.Fecha;
 import java.util.ArrayList;
 
 public class SolicitudEncuentro {
@@ -11,16 +9,28 @@ public class SolicitudEncuentro {
     final Ciudadano emisor;
     protected ArrayList<Ciudadano> participantesConfirmados;
     ArrayList<Ciudadano> participantes;
-    final LocalDateTime fechaDesde;
-    final LocalDateTime fechaHasta;
+    final Fecha fechaDesde;
+    final Fecha fechaHasta;
     public boolean estado;
+    private final String zona;
+    Ciudadano participanteUnico;
 
-    public SolicitudEncuentro(Ciudadano emisor,ArrayList<Ciudadano> participantes, LocalDateTime fechaDesde, LocalDateTime fechaHasta){
+    public SolicitudEncuentro(Ciudadano emisor, ArrayList<Ciudadano> participantes, Fecha fechaDesde, Fecha fechaHasta, String zona){
         this.participantes = participantes;
         this.emisor = emisor;
         this.fechaDesde = fechaDesde;
         this.fechaHasta = fechaHasta;
         this.participantesConfirmados = new ArrayList<>();
+        this.zona = zona;
+
+    }
+    public SolicitudEncuentro(Ciudadano emisor, Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta, String zona){
+        this.participanteUnico = unCiudadano;
+        this.emisor = emisor;
+        this.fechaDesde = fechaDesde;
+        this.fechaHasta = fechaHasta;
+        this.participantesConfirmados = new ArrayList<>();
+        this.zona = zona;
 
     }
     public ArrayList<Ciudadano> getParticipantes(){
@@ -51,11 +61,19 @@ public class SolicitudEncuentro {
         return emisor;
     }
 
-    public LocalDateTime getFechaDesde() {
+    public Fecha getFechaDesde() {
         return fechaDesde;
     }
 
-    public LocalDateTime getFechaHasta() {
+    public Fecha getFechaHasta() {
         return fechaHasta;
+    }
+
+    public ArrayList<Ciudadano> getParticipantesConfirmados() {
+        return participantesConfirmados;
+    }
+
+    public String getZona() {
+        return zona;
     }
 }

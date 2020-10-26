@@ -2,8 +2,7 @@ package ABM;
 
 import Eventos.Enfermedad;
 import Exceptions.IllegalConditionsException;
-import Exceptions.InexistentUserException;
-import java.util.ArrayList;
+
 
 
 public class Administrador{
@@ -35,5 +34,9 @@ public class Administrador{
 
     public String getNombreUsuario() {
         return nombreUsuario;
+    }
+
+    protected void setContrasena(String nuevaContrasena) {
+        contrasena = nuevaContrasena;
     }
 }

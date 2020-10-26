@@ -3,8 +3,7 @@ import ABM.Ciudadano;
 import Eventos.Enfermedad;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
-
-import java.time.LocalDateTime;
+import Persistencia.Fecha;
 import java.util.ArrayList;
 
 
@@ -28,10 +27,10 @@ public class TraceIT{ //Test del programa
 
 
 //Registramos los sintomas de cada usuario y mostramos el estado de si presentan la enfermedad antes creada
-        pedro.presenciaSintomas("tos",LocalDateTime.of(2020,10,9,12,30));
-        pedro.presenciaSintomas("dolor muscular",LocalDateTime.of(2020,10,9,12,30));
-        julian.presenciaSintomas("fiebre",LocalDateTime.of(2020,10,9,12,30));
-        julian.presenciaSintomas("tos",LocalDateTime.of(2020,10,9,12,30));
+        pedro.presenciaSintomas("tos", new Fecha(10,9,12));
+        pedro.presenciaSintomas("dolor muscular",new Fecha(10,12,30));
+        julian.presenciaSintomas("fiebre",new Fecha(9,12,30));
+        julian.presenciaSintomas("tos",new Fecha(10,12,30));
 
         pedro.mostrarSintomas();
         julian.mostrarSintomas();
@@ -41,7 +40,7 @@ public class TraceIT{ //Test del programa
 
 // Generamos un contacto entre 2 ciudadanos, ahi tambien reevaluamos el estado de enfermedad y mostramos los nuevos sintomas
         try {
-            pedro.tieneContacto(participantes,LocalDateTime.of(2020,10,9,12,30),LocalDateTime.of(2020,10,9,14,30),covid); //El metodo no esta completo y no funciona adecuadamente todavia
+            pedro.solicitarContacto(participantes,new Fecha(10,9,12),new Fecha(9,14,30),"Pilar"); //El metodo no esta completo y no funciona adecuadamente todavia
         } catch (InexistentUserException e) {
             e.printStackTrace();
         }

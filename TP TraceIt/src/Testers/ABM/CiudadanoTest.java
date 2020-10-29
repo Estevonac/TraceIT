@@ -41,7 +41,7 @@ public class CiudadanoTest {
 
     @Test
     public void presenciaSintomas() {
-        jose.presenciaSintomas("Fiebre", new Fecha(10,13,45)); // Podria modelar sintomas y tener 2 contructores
+        jose.presenciaSintomas("Fiebre", new Fecha(10,10,13,45)); // Podria modelar sintomas y tener 2 contructores
         // Uno para ser usado en enfermedad. Solo String y otro para un ciudadano que le vincule la fecha.
         assertEquals(jose.mostrarSintomas().get(0),"Fiebre"); // Sino usar un Hasmap para vincularlo con la HashMap<fecha Fecha, Stirng sintoma>
 
@@ -52,7 +52,7 @@ public class CiudadanoTest {
     public void mostrarSolicitudesRecibidas() throws InexistentUserException {
         ArrayList<Ciudadano> participantes = new ArrayList<>();
         participantes.add(jose); // Ver si reescribo los metodos para que funcionen con uno o con varios ciudadanos.
-        juan.solicitarContacto(participantes,new Fecha(10,20,30),new Fecha(10,23,45),"Pilar");
+        juan.solicitarContacto(participantes,new Fecha(10,10,20,30),new Fecha(10,10,23,45),"Pilar");
         assertTrue(jose.solicitudesRecibidas.size()==1); // Reconoceria que le llego una solicitud
     }
 }

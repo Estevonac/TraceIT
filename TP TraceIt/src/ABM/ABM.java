@@ -31,9 +31,12 @@ public class ABM implements GestorDeArchivos {
 
     public void cambiarNombre(Administrador unAdmin, String nuevoNombre) throws InvalidDataException, IOException {
         if (listaAdministradores.contains(unAdmin)){
+            String viejoAdmin = unAdmin.getNombreUsuario() + "," + unAdmin.getContrasena();
+            String nuevoAdmin = nuevoNombre + "," + unAdmin.getContrasena();
             for (Administrador a: listaAdministradores) {
                 if (a == unAdmin){
-                    editarArchivo("Administradores",a.getNombreUsuario(),nuevoNombre);
+
+                    editarArchivo("Administradores",viejoAdmin,nuevoAdmin);
                     a.nombreUsuario = nuevoNombre;
 
                 }
@@ -70,5 +73,13 @@ public class ABM implements GestorDeArchivos {
         }
     }
 
-    //Crear metodos para escribir a los administradores en los archivos o hacerlo directamente en los otros metodos
+    public ArrayList<String> getListaAdministradores(){
+
+        ArrayList<String> listaToString = new ArrayList<>();
+        for(Administrador admin : listaAdministradores){
+            listaToString.add(admin.getNombreUsuario() + "," + admin.getContrasena());
+
+        }
+        return listaToString;
+    }
 }

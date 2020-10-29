@@ -1,5 +1,4 @@
-Zona	Cantidad Contagios
-
+Zona,Cantidad Contagios
 Pilar,1100
 CABA,67789
 Del Viso,441

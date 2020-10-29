@@ -20,4 +20,26 @@ public class ABMTest implements GestorDeArchivos {
 
 
     }
+    @Test
+    public void cambiarNombreShouldUpdateTheFile() throws InvalidDataException, IOException {
+        ABM abm = new ABM();
+        Administrador unAdmin = new Administrador("juansito", "admin123");
+        Administrador otroADmin = new Administrador("jorge","jorge123");
+        abm.addAdministrador(unAdmin);
+
+
+        abm.cambiarNombre(unAdmin,"nuevoJuansito");
+        abm.addAdministrador(otroADmin);
+        System.out.println(abm.getListaAdministradores());
+        // Como lo chequeo por metodo?
+
+        // Chequeado manualmente en datasets y funciona.
+
+
+    }
+
+    @Test
+    public void mostrarAdministradoresFromFile() throws IOException {
+        leerArchivo("Administradores"); // Como chequeo con assert?
+    }
 }

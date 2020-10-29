@@ -2,14 +2,17 @@ package Persistencia;
 
 public class Fecha {
 
-    private final int dia, hora, minuto;
+    private final int mes, dia, hora, minuto;
 
 
-    public Fecha(int dia, int hora, int minuto){
+    public Fecha(int dia,int mes, int hora, int minuto){ //Incluir mes
+        this.mes = mes;
         this.dia = dia;
         this.hora = hora;
         this.minuto = minuto;
     }
+
+    public int getMes() { return mes; }
 
     public int getDia() {
         return dia;
@@ -23,14 +26,16 @@ public class Fecha {
         return minuto;
     }
 
-    public String getFechaAsString(){ return (getDia() + " " + getHora() + ":" + getMinuto());}
+    public String getFechaAsString(){ return (getDia() +  "/" +getMes() + " " + getHora() + ":" + getMinuto());}
 
-    public int tiempoEntreFechasEnHoras(Fecha segundaFecha){
-
-        int diferenciaDiasEnHoras = (segundaFecha.getDia() - this.getDia()) * 24;
+    public int tiempoEntreFechasEnHoras(Fecha segundaFecha){ //Rehacer metodo
         int diferenciaHoras = Math.abs(segundaFecha.getHora() - this.getHora());
-        //int diferenciaMinutos = Math.abs(segundaFecha.getMinuto() - this.getMinuto());
 
-        return diferenciaDiasEnHoras + diferenciaHoras;
+       if (segundaFecha.getDia() - this.getDia() < 0){ // Estamos en diferentes meses.
+
+       }
+        int diferenciaDiasEnHoras = (segundaFecha.getDia() - this.getDia()) * 24;
+
+        return  diferenciaDiasEnHoras + diferenciaHoras;
     }
 }

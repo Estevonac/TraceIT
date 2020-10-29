@@ -3,8 +3,6 @@ package ABM;
 import Eventos.Enfermedad;
 import Exceptions.IllegalConditionsException;
 
-
-
 public class Administrador{
 
     protected   String nombreUsuario;
@@ -20,7 +18,6 @@ public class Administrador{
     public Enfermedad crearEnfermedad(String nombre){
          return new Enfermedad(nombre);
     }
-
 
 
     public void desbloquarCiudadano(Ciudadano unCiudadano) throws IllegalConditionsException { // podria tambien chequear que exista el ciudadano
@@ -39,4 +36,6 @@ public class Administrador{
     protected void setContrasena(String nuevaContrasena) {
         contrasena = nuevaContrasena;
     }
+
+    protected String getContrasena() { return contrasena;}
 }

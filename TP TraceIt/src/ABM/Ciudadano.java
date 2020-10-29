@@ -1,5 +1,6 @@
 package ABM;
 
+import Eventos.Encuentro;
 import Eventos.Enfermedad;
 import Eventos.SolicitudEncuentro;
 import Exceptions.InexistentUserException;
@@ -11,7 +12,7 @@ public class Ciudadano{
 
     public boolean habilitado;
     public boolean estaEnfermo;
-    int solicitudesCounter;
+    public int solicitudesCounter;
     final String numeroTelefono;
     private final String cuil;
     ArrayList<String> sintomas;
@@ -44,7 +45,9 @@ public class Ciudadano{
             return habilitado;
         }
 
-
+    public int getSolicitudesCounter() {
+        return solicitudesCounter;
+    }
 
     public boolean estaEnfermo(){ // Evalua si el ciudadano esta enfermo.
         return estaEnfermo;
@@ -69,15 +72,18 @@ public class Ciudadano{
         }
 
     }
-
-    public void solicitarContacto(ArrayList<Ciudadano> participantes, Fecha fechaDesde, Fecha fechaHasta,String zona) throws InexistentUserException { // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
+    //Solicitar Contacto crea las invitaciones
+    public void solicitarContacto(ArrayList<Ciudadano> participantes, Fecha fechaDesde, Fecha fechaHasta,String zona) throws InexistentUserException {
 
         SolicitudEncuentro unEncuentro = new SolicitudEncuentro(this,participantes,fechaDesde,fechaHasta,zona); // Reestructurar y extraer metodo en clase SolicitudEncuentro
-    unEncuentro.enviarSolicitudes();
+        unEncuentro.enviarSolicitudes();
     }
-    public void solicitarContacto(Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta,String zona) throws InexistentUserException { // Le tenemos que mandar un mensaje al otro ciudadano para confirmar.
 
-        SolicitudEncuentro unEncuentro = new SolicitudEncuentro(this,unCiudadano,fechaDesde,fechaHasta,zona); // Reestructurar y extraer metodo en clase SolicitudEncuentro
+    //Empezar Encuentro crea el encuentro tomando los participantes que han confirmado la asistencia
+    public Encuentro empezarEncuentro(SolicitudEncuentro unaSolicitud){
+
+        unaSolicitud.confirmarCiudadanos(unaSolicitud.getParticipantes());
+        return new Encuentro(unaSolicitud.getParticipantesConfirmados(), unaSolicitud.getFechaDesde(), unaSolicitud.getFechaHasta(), unaSolicitud.getZona());
 
     }
 

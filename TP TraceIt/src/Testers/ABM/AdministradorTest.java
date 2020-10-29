@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 public class AdministradorTest {
 
+
     @Test
     public void crearEnfermedad() {
     }

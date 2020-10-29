@@ -53,6 +53,6 @@ public class CiudadanoTest {
         ArrayList<Ciudadano> participantes = new ArrayList<>();
         participantes.add(jose); // Ver si reescribo los metodos para que funcionen con uno o con varios ciudadanos.
         juan.solicitarContacto(participantes,new Fecha(10,20,30),new Fecha(10,23,45),"Pilar");
-        assertTrue(jose.solicitudesRecibidas.size()!=0); // Reconoceria que le llego una solicitud
+        assertTrue(jose.solicitudesRecibidas.size()==1); // Reconoceria que le llego una solicitud
     }
 }

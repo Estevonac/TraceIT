@@ -1,0 +1,1 @@
+NombreCiudadano, Zona, FechaDesde, FechaHasta, EstaEnfermo

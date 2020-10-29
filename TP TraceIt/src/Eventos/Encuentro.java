@@ -28,6 +28,29 @@ public class Encuentro {
     }
 
 
+    public int getCantEnfermosEnEncuentro(Enfermedad unaEnfermedad){
+        int cantEnfermos = 0;
+        for (Ciudadano unCiudadano : invitados){
+            unCiudadano.evaluarSintomas(unaEnfermedad);
+            if (unCiudadano.estaEnfermo()){
+                cantEnfermos++;
+            }
+        }
+
+        return cantEnfermos;
+    }
+    public ArrayList<Ciudadano> getEnfermosEnEncuentro(Enfermedad unaEnfermedad){
+        ArrayList<Ciudadano> enfermos = new ArrayList<>();
+        for (Ciudadano unCiudadano : invitados){
+            unCiudadano.evaluarSintomas(unaEnfermedad);
+            if (unCiudadano.estaEnfermo()){
+                enfermos.add(unCiudadano);
+            }
+        }
+        return enfermos;
+    }
+
+
     public String getZona() {
         return zona;
     }

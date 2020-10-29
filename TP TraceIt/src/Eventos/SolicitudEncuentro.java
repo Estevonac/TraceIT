@@ -24,7 +24,7 @@ public class SolicitudEncuentro {
         this.zona = zona;
 
     }
-    public SolicitudEncuentro(Ciudadano emisor, Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta, String zona){
+    public SolicitudEncuentro(Ciudadano emisor, Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta, String zona){ // Opcion de 2 personas
         this.participanteUnico = unCiudadano;
         this.emisor = emisor;
         this.fechaDesde = fechaDesde;
@@ -41,6 +41,10 @@ public class SolicitudEncuentro {
         for (Ciudadano unCiudadano : participantes) {
             if (unCiudadano.getEstadoSolicitud(this)) {
                 participantesConfirmados.add(unCiudadano);
+            }
+            else { // Por cada ciudadano que la tenga rechazada hay que actualizar el contador de solicitudes rechazadas del emisor
+                this.emisor.solicitudesCounter ++;
+
             }
         }
     }

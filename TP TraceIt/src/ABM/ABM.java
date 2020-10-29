@@ -2,35 +2,40 @@ package ABM;
 
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
-import Exceptions.InvalidPasswordException;
+import Persistencia.GestorDeArchivos;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class ABM {
+public class ABM implements GestorDeArchivos {
     ArrayList<Administrador> listaAdministradores;
     ArrayList<Ciudadano> listaCiudadanos;
 
     public ABM(){
-        this.listaAdministradores = new ArrayList<>();
+        this.listaAdministradores = new ArrayList<>(); // Obtenerla listas de los archivos de persistencia.
         this.listaCiudadanos = new ArrayList<>();
 
     }
 
-    public void addAdministrador(Administrador administrador) throws InvalidDataException {
+    public void addAdministrador(Administrador administrador) throws InvalidDataException, IOException {
         if(listaAdministradores.contains(administrador.getNombreUsuario())){
             throw new InvalidDataException("Administrador ya existente");
         }
         else {
+            String adminDatos = administrador.getNombreUsuario() + "," + administrador.getContrasena();
+            escribirArchivo("Administradores",adminDatos);
             listaAdministradores.add(administrador);
         }
     }
 
-    public void cambiarNombre(Administrador unAdmin, String nuevoNombre) throws InvalidDataException{
+    public void cambiarNombre(Administrador unAdmin, String nuevoNombre) throws InvalidDataException, IOException {
         if (listaAdministradores.contains(unAdmin)){
             for (Administrador a: listaAdministradores) {
                 if (a == unAdmin){
+                    editarArchivo("Administradores",a.getNombreUsuario(),nuevoNombre);
                     a.nombreUsuario = nuevoNombre;
+
                 }
 
             }

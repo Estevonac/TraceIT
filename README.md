@@ -10,11 +10,11 @@ Trabajo Práctico Especial
         Agustin Bazan
         Ignacio Estevo
         
-Diseño
+*Diseño*
 Usuarios
 Existen 2 tipos de usuarios, como se requería. Los administradores y los ciudadanos. Los administradores se registran con usuario y contraseña mientras que los ciudadanos con CUIL y numero de teléfono.
 Eventos
-En cuanto a los eventos, decidimos modelar la clase enfermedad en la cual se pueden crear diversas enfermedades con sus síntomas asociados. La consideramos presente en un ciudadano si aunque sea posee 2 de estos síntomas. Los contactos con personas son avisados por el ciudadano y confirmado por el/ los otro/s ciudadano/s involucrado/s. Para realizar esto, generamos una solicitud de encuentro para que el otro ciudadano acepte o rechace y luego generamos el contacto en caso de haber sido aceptada. Si un ciudadano tiene un sintoma y se junta con otro que no lo tiene, el ciudadano sin síntoma tiene un 65% de contagiarse. Si un ciudadano tiene 5 contactos rechazados (un ciudadano B no reconoce haber tenido contacto con otro ciudadano A), este pasa a ser bloqueado hasta que el administrador lo desbloquee.
+En cuanto a los eventos, decidimos modelar la clase enfermedad en la cual se pueden crear diversas enfermedades con sus síntomas asociados. La consideramos presente en un ciudadano si aunque sea posee 2 de estos síntomas. Los contactos con personas son avisados por el ciudadano y confirmado por el/ los otro/s ciudadano/s involucrado/s. Para realizar esto, generamos una solicitud de encuentro para que el otro ciudadano acepte o rechace y luego generamos el contacto en caso de haber sido aceptada. Si un ciudadano tiene un sintoma y se junta con otro que no lo tiene, el ciudadano sin síntoma tiene un 65% de contagiarse. Si un ciudadano tiene 5 contactos rechazados (un ciudadano B no reconoce haber tenido contacto con otro ciudadano A), este pasa a ser bloqueado hasta que el administrador lo desbloquee. Ademas, si un ciudadano esta enfermo tambien pasa a estar bloqeado, ya que debe aislarse y no puede tener otros contactos.
   Un encuentro consiste en una lista de participantes (Ciudadanos), un horario de inicio y fin y una zona de encuentro. Está asociado a la clase SolicitudEncuentro ya que esta contiene las solicitudes enviadas a los ciudadanos.
 
 Brotes

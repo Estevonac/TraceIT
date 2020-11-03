@@ -9,11 +9,12 @@ public class Enfermedad {
      */
     private final String nombre;
     public ArrayList<String> sintomasEnfermedad;
+    public ArrayList<Enfermedad> enfermedadesVigentes = new ArrayList<>();
 
     public Enfermedad(String nombre){  // Creamos una enfermedad y luego podemos anadirle los sintomas relacionados
         this.nombre = nombre;
         sintomasEnfermedad = new ArrayList<>();
-
+        enfermedadesVigentes.add(this);
     }
 
     public void addSintomas(String sintoma){
@@ -23,6 +24,8 @@ public class Enfermedad {
     public String getNombre() {
         return nombre;
     }
+
+    public static ArrayList<Enfermedad> getEnfermedadesVigentes(){ return enfermedadesVigentes; }
 
     public ArrayList<String> mostrarSintomas(){
         return sintomasEnfermedad;

@@ -5,7 +5,7 @@ public class Fecha {
     private final int mes, dia, hora, minuto;
 
 
-    public Fecha(int dia,int mes, int hora, int minuto){ //Incluir mes
+    public Fecha(int dia,int mes, int hora, int minuto){
         this.mes = mes;
         this.dia = dia;
         this.hora = hora;

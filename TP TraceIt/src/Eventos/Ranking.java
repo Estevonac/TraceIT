@@ -22,8 +22,8 @@ public class Ranking implements GestorDeArchivos {
     private void llenarRanking() throws IOException { //Despues de crearlo hay que llenarlo con los datasets
         escribirArchivo("ZonasContagiadas",getRankingZonasYEnfermos().toString());
     }
-    private void sortMayorEnfermos() throws IOException {
-        HashMap<String, Integer> viejoRanking = new HashMap<>();
+    private void sortMayorEnfermos() throws IOException { // Implementar sorts
+        HashMap<String, Integer> viejoRanking = new HashMap<>(); // Tiene que ser igual a this.
 
 
         editarArchivo("ZonasContagiadas", viejoRanking.toString(),getRankingZonasYEnfermos().toString());

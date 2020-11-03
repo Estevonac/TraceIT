@@ -16,25 +16,14 @@ public class Brote implements GestorDeArchivos {
     Utilizar las fechas. Necesitamos saber si en un encuentro se enfermaron algunas personas y los sintomas que contrajo
     Que fecha utilizamos? la inicial o la final. Acordarse que alguien enfermo no puede asistir.
      */
-    public Brote(String zona, ArrayList<Ciudadano> contagiados, int cantidadEnfermos, String enfermedad){ // Empezar a modelar
+    public Brote(String zona, ArrayList<Ciudadano> contagiados, int cantidadEnfermos, String enfermedad) throws IOException { // Empezar a modelar
 
         this.zona = zona;
         this.contagiados = contagiados;
         this.cantidadEnfermos = cantidadEnfermos;
+        escribirArchivo("Brotes", zona + "," + cantidadEnfermos); // Creo un brote y lo escribo
+
     }
-
-    //Brote a partir de un encuentro
-    public Brote surgioUnBrote(Enfermedad unaEnfermedad,Encuentro unEncuentro) throws IOException { // Re estructurar. Ahora es igual que constructor.
-            escribirArchivo("Brotes", unEncuentro.getZona() + "," + unEncuentro.getCantEnfermosEnEncuentro(unaEnfermedad));
-        return  new Brote(unEncuentro.getZona(), unEncuentro.getEnfermosEnEncuentro(unaEnfermedad),unEncuentro.getCantEnfermosEnEncuentro(unaEnfermedad), unaEnfermedad.getNombre());
-    }
-
-    //Brote a partir de un ArrayList de Ciudadanos
-    public Brote surgioUnBrote(ArrayList<Ciudadano> enfermos, Enfermedad unaEnfermedad,String zona){
-
-        return new Brote(zona,enfermos,enfermos.size(), unaEnfermedad.getNombre());
-    }
-
 
     public String getZona(){
         return zona;

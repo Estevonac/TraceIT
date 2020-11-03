@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class ABMTest implements GestorDeArchivos {
 
     @Test
-    public void addAdministrador() throws InvalidDataException, IOException {
+    public void addAdministradorDebeAnadirloAlArchivoPersistido() throws InvalidDataException, IOException {
         ABM abm = new ABM();
         Administrador unAdmin = new Administrador("JuanAdmin", "admin123");
         abm.addAdministrador(unAdmin);
@@ -21,7 +21,7 @@ public class ABMTest implements GestorDeArchivos {
 
     }
     @Test
-    public void cambiarNombreShouldUpdateTheFile() throws InvalidDataException, IOException {
+    public void cambiarNombreDebeActualizarElArchivoPersistido() throws InvalidDataException, IOException {
         ABM abm = new ABM();
         Administrador unAdmin = new Administrador("juansito", "admin123");
         Administrador otroADmin = new Administrador("jorge","jorge123");

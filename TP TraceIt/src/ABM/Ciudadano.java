@@ -6,6 +6,8 @@ import Eventos.SolicitudEncuentro;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Ciudadano{
@@ -15,10 +17,11 @@ public class Ciudadano{
     public int solicitudesCounter;
     final String numeroTelefono;
     private final String cuil;
-    ArrayList<String> sintomas;
+    public ArrayList<String> sintomas;
     public ArrayList<SolicitudEncuentro> solicitudesRecibidas, proximosEncuentros;
     private final String zona;
-
+    private Encuentro encuentroActual;
+    private Enfermedad enfermedadActual;
 
 
     public Ciudadano(String cuil, String numeroTelefono,String zona) throws InvalidDataException {
@@ -33,26 +36,6 @@ public class Ciudadano{
         }
 
 
-        public String getNumeroTelefono() {
-            return numeroTelefono;
-        }
-
-        public String getCuil() {
-            return cuil;
-        }
-
-        public boolean getHabilitado() {
-            return habilitado;
-        }
-
-    public int getSolicitudesCounter() {
-        return solicitudesCounter;
-    }
-
-    public boolean estaEnfermo(){ // Evalua si el ciudadano esta enfermo.
-        return estaEnfermo;
-    }
-
     public void evaluarSintomas(Enfermedad unaEnfermedad){ // Metodo para evaluar si un ciudadano esta enfermo.
         int sintomasCompartidos = 0;
         for (String sintomaEnfermedad: unaEnfermedad.sintomasEnfermedad) {
@@ -66,6 +49,7 @@ public class Ciudadano{
         if (sintomasCompartidos >= 2){
             estaEnfermo = true;
             habilitado = false; // Si un ciudadano ahora esta enfermo, entonces no puede solicitar contactos ya que debe aislarse
+            enfermedadActual = unaEnfermedad;
         }                       // Por lo tanto este es bloqueado.
         else{
             estaEnfermo = false;
@@ -79,65 +63,16 @@ public class Ciudadano{
         unEncuentro.enviarSolicitudes();
     }
 
-    //Empezar Encuentro crea el encuentro tomando los participantes que han confirmado la asistencia
-    public Encuentro empezarEncuentro(SolicitudEncuentro unaSolicitud){
-
-        unaSolicitud.confirmarCiudadanos(unaSolicitud.getParticipantes());
-        return new Encuentro(unaSolicitud.getParticipantesConfirmados(), unaSolicitud.getFechaDesde(), unaSolicitud.getFechaHasta(), unaSolicitud.getZona());
-
+    /*Empezar Encuentro crea el encuentro tomando los participantes que han confirmado la asistencia
+      Va a ser usado para mostrar la aplicacion ya que no vamos a esperar hasta que ocurra un evento.
+      Este se comunica con la clase encuentro para simularlo.
+     */
+    public void empezarEncuentro(SolicitudEncuentro unaSolicitud) throws IOException {
+        unaSolicitud.confirmarCiudadanos();
+        encuentroActual = new Encuentro(unaSolicitud.getParticipantesConfirmados(), unaSolicitud.getFechaDesde(), unaSolicitud.getFechaHasta(), unaSolicitud.getZona());
+        encuentroActual.evaluarEncuentro();
     }
 
-    public boolean evaluarContacto(SolicitudEncuentro unEncuentro){ //Como hacemos para que se llame cuando un ciudadano dice
-                                                                                        //tener un encuentro con otro
-        if (unEncuentro.estado = true) {     //Evaluar el estado de la solicitud y pasarselo a Encuentro para evaluar el metodo
-            ArrayList<String> sintomasContacto = this.sintomas;
-            for (Ciudadano unCiudadano: unEncuentro.getParticipantesConfirmados()) {
-
-
-                for (String s : unCiudadano.sintomas) { // Arreglar para que funcione con multiples ciudadanos
-                    if (!sintomasContacto.contains(s)) {
-                        if ((Math.random() * 100) >= 45) { //En un encuentro, una persona tiene un 55% de chance de contagiarse un sintoma de otro ciudadano
-                            sintomasContacto.add(s);
-                        }
-                    }
-                }
-                //Anado los sintomas del contacto a ambos ciudadanos
-                this.sintomas = sintomasContacto;
-                unCiudadano.sintomas = sintomasContacto;
-                System.out.println("Sintomas despues del contagio:" + sintomasContacto);
-
-                // Ahora necesito que se reevalue si los ciudadanos estan enfermos.
-                this.estaEnfermo = this.estaEnfermo();
-                unCiudadano.estaEnfermo = unCiudadano.estaEnfermo();
-
-                /*if ((!unCiudadano.estaEnfermo) && (!this.estaEnfermo)) { // Crear encuentros
-                    Encuentro encuentro = new Encuentro(unCiudadano, this, zona, fechaDesde, fechaHasta);
-
-                } else {
-                    Encuentro encuentro = new Encuentro(unCiudadano, this, zona, fechaDesde, fechaHasta);
-                    solicitudesCounter++;
-                }*/
-            }
-        }
-        unEncuentro = null; // Eliminar la solicitud creada antes. Preferentenmente
-        return  true;
-    }
-
-
-
-    public void presenciaSintomas(String unSintoma, Fecha fechaSintoma){  // Anade sintomas a un ciudadano Necesitamos fecha??
-            sintomas.add(unSintoma); // que pasa si hay un sintoma duplicado. Conservar el mas reciente.
-
-
-    }
-
-    private void eliminarSintoma(String unSintoma, Fecha fechaFin){ // Elimina sintomas a un ciudadano
-            sintomas.remove(unSintoma);
-    }
-
-    public ArrayList<String> mostrarSintomas(){
-            return sintomas;
-    }
 
     public void aceptarSolicitud(SolicitudEncuentro unaSolicitud) throws InvalidDataException {//Respuesta a una solicitud
 
@@ -147,19 +82,18 @@ public class Ciudadano{
             if (solicitud.equals(unaSolicitud)){
                 solicitud.estado = true;
                 solicitudesRecibidas.remove(solicitud); // La elimino de mi lista de solicitudes
-                proximosEncuentros.add(solicitud);
+                proximosEncuentros.add(solicitud);      // y la anado a los proximos encuentros
             }
         }
     }
     else{
         throw new InvalidDataException("No hay ninguna solicitud de encuentro");
+        }
+    }
 
-    }
-    }
     public void rechazarSolicitud(SolicitudEncuentro unaSolicitud) throws InvalidDataException {//Respuesta a una solicitud
 
         if (solicitudesRecibidas.size()>0){
-
             for(SolicitudEncuentro solicitud : solicitudesRecibidas) { // loopear y buscar solicitud sino exception
                 if (solicitud.equals(unaSolicitud)){
                     solicitud.estado = false;
@@ -170,8 +104,25 @@ public class Ciudadano{
         }
         else{
             throw new InvalidDataException("No hay ninguna solicitud de encuentro");
-
         }
+    }
+    //En el caso de que ya tenga el sintoma, se elimina el viejo y se anade el nuevo. Usamos esto para actualizar la fecha
+    public void presenciaSintomas(String nuevoSintoma, Fecha fechaSintoma){
+        for (String sintomaYaPresente : sintomas){
+            if (sintomaYaPresente.equals(nuevoSintoma)){
+                sintomas.remove(sintomaYaPresente);
+                sintomas.add(nuevoSintoma);
+            }
+        }
+        sintomas.add(nuevoSintoma);
+    }
+
+    private void eliminarSintoma(String unSintoma, Fecha fechaFin){ // Elimina sintomas a un ciudadano
+        sintomas.remove(unSintoma);
+    }
+
+    public ArrayList<String> mostrarSintomas(){
+        return sintomas;
     }
 
     public ArrayList<SolicitudEncuentro> mostrarSolicitudesRecibidas(){
@@ -184,6 +135,30 @@ public class Ciudadano{
         return unaSolicitud.estado;
     }
 
+    public String getNumeroTelefono() {
+        return numeroTelefono;
+    }
+
+    public String getCuil() {
+        return cuil;
+    }
+    public ArrayList<Enfermedad> getEnfermedadesVigentes(){ return Enfermedad.getEnfermedadesVigentes();} // No creo que sea la mejor solucion
+
+    public boolean getHabilitado() {
+        return habilitado;
+    }
+
+    public int getSolicitudesCounter() {
+        return solicitudesCounter;
+    }
+
+    public boolean estaEnfermo(){ // Evalua si el ciudadano esta enfermo.
+        return estaEnfermo;
+    }
+
+    public Encuentro getEncuentroActual() { return encuentroActual; }
+
+    public Enfermedad getEnfermedadActual(){ return enfermedadActual;}
 }
 
 

@@ -24,7 +24,8 @@ public class SolicitudEncuentro {
         this.zona = zona;
 
     }
-    public SolicitudEncuentro(Ciudadano emisor, Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta, String zona){ // Opcion de 2 personas
+    // Opcion de 2 personas. Eliminarlo? El primer constructor funciona para ambos casos.
+    public SolicitudEncuentro(Ciudadano emisor, Ciudadano unCiudadano, Fecha fechaDesde, Fecha fechaHasta, String zona){
         this.participanteUnico = unCiudadano;
         this.emisor = emisor;
         this.fechaDesde = fechaDesde;
@@ -33,51 +34,38 @@ public class SolicitudEncuentro {
         this.zona = zona;
 
     }
-    public ArrayList<Ciudadano> getParticipantes(){
-        return  participantes;
-    }
 
-    public void confirmarCiudadanos(ArrayList<Ciudadano> participantes){
-        for (Ciudadano unCiudadano : participantes) {
-            if (unCiudadano.getEstadoSolicitud(this)) {
-                participantesConfirmados.add(unCiudadano);
-            }
-            else { // Por cada ciudadano que la tenga rechazada hay que actualizar el contador de solicitudes rechazadas del emisor
-                this.emisor.solicitudesCounter ++;
-
-            }
-        }
-    }
-
-    public void enviarSolicitudes(){ // Le envia a todos los participantes una solicitud que contiene nombre del emisor, participantes y fecha.
-
+    // Primero le enviamos las solicitudes a los participantes
+    public void enviarSolicitudes(){
         for (Ciudadano unCiudadano: participantes){
             unCiudadano.solicitudesRecibidas.add(this);
         }
         participantes.add(emisor); // anadimos al emisor a la lista de participantes para un manejo posterior mas facil
     }
 
-    public boolean getEstadoSolicitudParticipante(Ciudadano unCiudadano){
-        return unCiudadano.getEstadoSolicitud(this);
+    // Evaluamos la respuestas de los participantes. Despues de esta accion se puede proceder a crear el encuentro
+    public void confirmarCiudadanos(){
+        for (Ciudadano unCiudadano : participantes) {
+            if (unCiudadano.getEstadoSolicitud(this)) {
+                participantesConfirmados.add(unCiudadano);
+            }
+            else { //Por cada ciudadano que la tenga rechazada hay que actualizar el contador de solicitudes rechazadas del emisor
+                this.emisor.solicitudesCounter ++;
+            }
+        }
     }
 
-    public Ciudadano getEmisor() {
-        return emisor;
+    public boolean getEstadoSolicitudParticipante(Ciudadano unCiudadano){ return unCiudadano.getEstadoSolicitud(this); }
+
+    public ArrayList<Ciudadano> getParticipantes(){
+        return  participantes;
     }
 
-    public Fecha getFechaDesde() {
-        return fechaDesde;
-    }
+    public Fecha getFechaDesde(){ return fechaDesde; }
 
-    public Fecha getFechaHasta() {
-        return fechaHasta;
-    }
+    public Fecha getFechaHasta() { return fechaHasta; }
 
-    public ArrayList<Ciudadano> getParticipantesConfirmados() {
-        return participantesConfirmados;
-    }
+    public ArrayList<Ciudadano> getParticipantesConfirmados() { return participantesConfirmados; }
 
-    public String getZona() {
-        return zona;
-    }
+    public String getZona() { return zona; }
 }

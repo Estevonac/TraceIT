@@ -10,7 +10,7 @@ Trabajo Práctico Especial
         Agustin Bazan
         Ignacio Estevo
         
-*Diseño*
+<h1>Diseño </h1>
 Usuarios
 Existen 2 tipos de usuarios, como se requería. Los administradores y los ciudadanos. Los administradores se registran con usuario y contraseña mientras que los ciudadanos con CUIL y numero de teléfono.
 Eventos

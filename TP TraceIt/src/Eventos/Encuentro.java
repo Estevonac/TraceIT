@@ -44,7 +44,7 @@ public class Encuentro {
                 for (String sintoma : sintomasContacto){ // Anadimos los sintomas a cada ciudadano
                     unCiudadano.presenciaSintomas(sintoma,getFechaHasta()); //Utilizamos la fecha de finalizacion
             }
-            for (Enfermedad unaEnfermedad : getEnfermedadesVigentes()) {
+            for (Enfermedad unaEnfermedad : getEnfermedadesVigentes()) { //Usar la persistencia para leer los archivos
                 unCiudadano.evaluarSintomas(unaEnfermedad); //Evaluamos los sintomas para cada enfermedad
             }
 

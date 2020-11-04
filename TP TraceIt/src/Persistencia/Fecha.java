@@ -29,13 +29,11 @@ public class Fecha {
     public String getFechaAsString(){ return (getDia() +  "/" +getMes() + " " + getHora() + ":" + getMinuto());}
 
     public int tiempoEntreFechasEnHoras(Fecha segundaFecha){ //Rehacer metodo
-        int diferenciaHoras = Math.abs(segundaFecha.getHora() - this.getHora());
 
-       if (segundaFecha.getDia() - this.getDia() < 0){ // Estamos en diferentes meses.
+        int fecha1EnHoras = getMes()*730 + getDia() * 24 + getHora() + getMinuto()/60;
+        int fecha2EnHoras = getMes()*730 + getDia() *24 + getHora() + getMinuto()/60;
 
-       }
-        int diferenciaDiasEnHoras = (segundaFecha.getDia() - this.getDia()) * 24;
+        return Math.abs(fecha2EnHoras - fecha1EnHoras);
 
-        return  diferenciaDiasEnHoras + diferenciaHoras;
     }
 }

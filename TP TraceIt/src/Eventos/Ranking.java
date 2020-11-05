@@ -15,8 +15,13 @@ public class Ranking implements GestorDeArchivos {
     // Este ranking relaciona la cantidad de enfermos por zona
     public Ranking() throws IOException { // lee el dataset de zonas que incluye contagios
         rankingZonasYEnfermos = new HashMap<>();
+        llenarRankingPorArchivo();
     }
+
+
     public void anadirARanking(String zona, Integer cantidad){ rankingZonasYEnfermos.put(zona,cantidad);}
+
+    public void anadirHashmapARanking(HashMap<String, Integer> nuevoRanking){ rankingZonasYEnfermos = nuevoRanking; }
 
     public void llenarRankingPorArchivo() throws IOException { //Lee el archivo y lo llena desde el archivo
         FileReader fileReader = new FileReader("EnfermosPorZona");
@@ -31,33 +36,30 @@ public class Ranking implements GestorDeArchivos {
         bufferedReader.close();
     }
 
-
     private void persistirRanking() throws IOException { //Despues de crearlo hay que llenarlo con los datasets
         escribirArchivo("ZonasContagiadas",getRankingZonasYEnfermos().toString());
     }
-    private void sortMayorEnfermos() throws IOException { // Implementar sorts
-        HashMap<String, Integer> viejoRanking = new HashMap<>(); // Tiene que ser igual a this.
+    public void sortMayorEnfermos() throws IOException { // Implementar sorts
 
-        Object[] array = viejoRanking.entrySet().toArray();
+        Object[] array = rankingZonasYEnfermos.entrySet().toArray();
         Arrays.sort(array, new Comparator() {
             public int compare(Object o1, Object o2) {
                 return ((Map.Entry<String, Integer>) o2).getValue()
                         .compareTo(((Map.Entry<String, Integer>) o1).getValue());
             }
         });
-        editarArchivo("ZonasContagiadas", viejoRanking.toString(),getRankingZonasYEnfermos().toString());
+        editarArchivo("ZonasContagiadas", rankingZonasYEnfermos.toString(),getRankingZonasYEnfermos().toString());
     }
-    private void sortMenorEnfermos() throws IOException {
-        HashMap<String, Integer> viejoRanking = new HashMap<>();
+    public void sortMenorEnfermos() throws IOException {
 
-        Object[] array = viejoRanking.entrySet().toArray();
+        Object[] array = rankingZonasYEnfermos.entrySet().toArray();
         Arrays.sort(array, new Comparator() {
             public int compare(Object o1, Object o2) {
                 return ((Map.Entry<String, Integer>) o1).getValue()
                         .compareTo(((Map.Entry<String, Integer>) o2).getValue());
             }
         });
-        editarArchivo("ZonasContagiadas", viejoRanking.toString(),getRankingZonasYEnfermos().toString());
+        editarArchivo("ZonasContagiadas", rankingZonasYEnfermos.toString(),getRankingZonasYEnfermos().toString());
     }
 
     public HashMap<String, Integer> mostrarRankingMenorEnfermos() throws IOException {

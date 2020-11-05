@@ -2,6 +2,7 @@ package ABM;
 
 import Eventos.Encuentro;
 import Eventos.Enfermedad;
+import Eventos.RastreadorEnfermos;
 import Eventos.SolicitudEncuentro;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
@@ -10,7 +11,7 @@ import Persistencia.Fecha;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Ciudadano{
+public class Ciudadano implements RastreadorEnfermos {
 
     public boolean habilitado;
     public boolean estaEnfermo;
@@ -25,34 +26,38 @@ public class Ciudadano{
 
 
     public Ciudadano(String cuil, String numeroTelefono,String zona) throws InvalidDataException {
-            this.cuil = cuil;
-            this.numeroTelefono = numeroTelefono;
-            habilitado = true;
-            solicitudesCounter = 0;
-            estaEnfermo = false;
-            sintomas = new ArrayList<>();
-            solicitudesRecibidas = new ArrayList<>();
-            this.zona = zona;
-        }
+        this.cuil = cuil;
+        this.numeroTelefono = numeroTelefono;
+        habilitado = true;
+        solicitudesCounter = 0;
+        estaEnfermo = false;
+        sintomas = new ArrayList<>();
+        solicitudesRecibidas = new ArrayList<>();
+        this.zona = zona;
+    }
 
 
-    public void evaluarSintomas(Enfermedad unaEnfermedad){ // Metodo para evaluar si un ciudadano esta enfermo.
-        int sintomasCompartidos = 0;
-        for (String sintomaEnfermedad: unaEnfermedad.sintomasEnfermedad) {
-            for (String sintomaCiudadano: sintomas) {
+    public void evaluarSintomas() throws IOException { // Metodo para evaluar si un ciudadano esta enfermo.
 
-                if (sintomaEnfermedad.equals(sintomaCiudadano)){
-                    sintomasCompartidos++;
+
+        for (Enfermedad unaEnfermedad : getEnfermedadesVigentes()) {
+            int sintomasCompartidos = 0;
+            for (String sintomaEnfermedad : unaEnfermedad.sintomasEnfermedad) {
+                for (String sintomaCiudadano : sintomas) {
+
+                    if (sintomaEnfermedad.equals(sintomaCiudadano)) {
+                        sintomasCompartidos++;
+                    }
                 }
             }
-        }
-        if (sintomasCompartidos >= 2){
-            estaEnfermo = true;
-            habilitado = false; // Si un ciudadano ahora esta enfermo, entonces no puede solicitar contactos ya que debe aislarse
-            enfermedadActual = unaEnfermedad;
-        }                       // Por lo tanto este es bloqueado.
-        else{
-            estaEnfermo = false;
+            if (sintomasCompartidos >= 2) {
+                estaEnfermo = true;
+                habilitado = false; // Si un ciudadano ahora esta enfermo, entonces no puede solicitar contactos ya que debe aislarse
+                enfermedadActual = unaEnfermedad;
+            }                       // Por lo tanto este es bloqueado.
+            else {
+                estaEnfermo = false;
+            }
         }
 
     }
@@ -78,16 +83,16 @@ public class Ciudadano{
 
         if (solicitudesRecibidas.size()>0){
 
-        for(SolicitudEncuentro solicitud : solicitudesRecibidas) { // loopear y buscar solicitud sino exception
-            if (solicitud.equals(unaSolicitud)){
-                solicitud.estado = true;
-                solicitudesRecibidas.remove(solicitud); // La elimino de mi lista de solicitudes
-                proximosEncuentros.add(solicitud);      // y la anado a los proximos encuentros
+            for(SolicitudEncuentro solicitud : solicitudesRecibidas) { // loopear y buscar solicitud sino exception
+                if (solicitud.equals(unaSolicitud)){
+                    solicitud.estado = true;
+                    solicitudesRecibidas.remove(solicitud); // La elimino de mi lista de solicitudes
+                    proximosEncuentros.add(solicitud);      // y la anado a los proximos encuentros
+                }
             }
         }
-    }
-    else{
-        throw new InvalidDataException("No hay ninguna solicitud de encuentro");
+        else{
+            throw new InvalidDataException("No hay ninguna solicitud de encuentro");
         }
     }
 
@@ -131,6 +136,8 @@ public class Ciudadano{
 
     public ArrayList<SolicitudEncuentro> mostrarEventosProximos(){return proximosEncuentros;}
 
+    public String horaProximoEvento(){return proximosEncuentros.get(0).getFechaDesde().getFechaAsString();}
+
     public boolean getEstadoSolicitud(SolicitudEncuentro unaSolicitud){
         return unaSolicitud.estado;
     }
@@ -142,7 +149,7 @@ public class Ciudadano{
     public String getCuil() {
         return cuil;
     }
-    public ArrayList<Enfermedad> getEnfermedadesVigentes(){ return Enfermedad.getEnfermedadesVigentes();} // No creo que sea la mejor solucion
+    // public ArrayList<Enfermedad> getEnfermedadesVigentes(){ return Enfermedad.getEnfermedadesVigentes();} // No creo que sea la mejor solucion
 
     public boolean getHabilitado() {
         return habilitado;
@@ -159,6 +166,8 @@ public class Ciudadano{
     public Encuentro getEncuentroActual() { return encuentroActual; }
 
     public Enfermedad getEnfermedadActual(){ return enfermedadActual;}
+
+    public String getNombreEnfermedadActual(){ return enfermedadActual.getNombre();}
 }
 
 

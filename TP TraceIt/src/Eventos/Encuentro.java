@@ -2,13 +2,12 @@ package Eventos;
 
 import ABM.Ciudadano;
 import Persistencia.Fecha;
-
 import java.io.IOException;
 import java.util.*;
 
-import static Eventos.Enfermedad.getEnfermedadesVigentes;
+//import static Evento.Enfermedad.getEnfermedadesVigentes;
 
-public class Encuentro {
+public class Encuentro implements RastreadorEnfermos{
 
     private final ArrayList<Ciudadano> invitados;
     private final Fecha fechaDesde, fechaHasta;
@@ -36,32 +35,41 @@ public class Encuentro {
         for (Ciudadano unCiudadano: this.getInvitados()) {
             for (String s : unCiudadano.mostrarSintomas()) {
                 if (!sintomasContacto.contains(s)) {
-                    if ((Math.random() * 100) >= 40) { //En un encuentro, una persona tiene un 60% de chance de contagiarse un sintoma de otro ciudadano
-                        sintomasContacto.add(s);
-                    }
+                    sintomasContacto.add(s);
+
                 }
             }
-                for (String sintoma : sintomasContacto){ // Anadimos los sintomas a cada ciudadano
-                    unCiudadano.presenciaSintomas(sintoma,getFechaHasta()); //Utilizamos la fecha de finalizacion
+            for (String sintoma : sintomasContacto) {//En un encuentro, una persona tiene un 60% de chance de contagiarse un sintoma de otro ciudadano
+                if ((Math.random() * 100) >= 40) {
+                    unCiudadano.presenciaSintomas(sintoma, getFechaHasta()); //Utilizamos la fecha de finalizacion
+                }
             }
-            for (Enfermedad unaEnfermedad : getEnfermedadesVigentes()) { //Usar la persistencia para leer los archivos
-                unCiudadano.evaluarSintomas(unaEnfermedad); //Evaluamos los sintomas para cada enfermedad
-            }
+            unCiudadano.evaluarSintomas();
 
-           if (unCiudadano.estaEnfermo()){
-               enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(),enfermedadesYEnfermos.get(unCiudadano.getEnfermedadActual()) +1);
-           }
+            if (unCiudadano.estaEnfermo()){
+                enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(),enfermedadesYEnfermos.get(unCiudadano.getEnfermedadActual()) +1);
+            }
 
         }
+        ordenarEnfermedadesYEnfermos(); //Testear metodo
+        enfermedadesYEnfermos.entrySet().forEach((entry) ->
+        {if(entry.getValue()>=5){
+            try {
+                new Brote(getZona(),getInvitados(),getCantEnfermosEnEncuentro(entry.getKey()),entry.getKey().getNombre());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        });
         //if (cantEnfermosEnAlgunaEnfermedad >= 5){ Falta el ultimo paso. Chequear con todas las enfermedades y si hay mas de 5 enfermos crear el brote
-           // Brote unBrote = new Brote(getZona(),enfermos,enfermos.size(),"Covid");
-        }
+        //  new Brote(getZona(),enfermos,enfermos.size(),getEnfermedad());
+    }
 
 
-    public int getCantEnfermosEnEncuentro(Enfermedad unaEnfermedad){
+    public int getCantEnfermosEnEncuentro(Enfermedad unaEnfermedad) throws IOException {
         int cantEnfermos = 0;
         for (Ciudadano unCiudadano : invitados){
-            unCiudadano.evaluarSintomas(unaEnfermedad);
+            unCiudadano.evaluarSintomas();
             if (unCiudadano.estaEnfermo()){
                 cantEnfermos++;
             }
@@ -69,10 +77,10 @@ public class Encuentro {
 
         return cantEnfermos;
     }
-    public ArrayList<Ciudadano> getEnfermosEnEncuentro(Enfermedad unaEnfermedad){
+    public ArrayList<Ciudadano> getEnfermosEnEncuentro(Enfermedad unaEnfermedad) throws IOException {
         ArrayList<Ciudadano> enfermos = new ArrayList<>();
         for (Ciudadano unCiudadano : invitados){
-            unCiudadano.evaluarSintomas(unaEnfermedad);
+            unCiudadano.evaluarSintomas();
             if (unCiudadano.estaEnfermo()){
                 enfermos.add(unCiudadano);
             }
@@ -88,10 +96,23 @@ public class Encuentro {
 
     public ArrayList<Ciudadano> getInvitados() {return invitados; }
 
-    public int getCantidadMayorEnfermos(){ // necesito las enfermedades con mas de 5 o mas enfermos Rehacer el sort de Hashmap<String, Integer>
-        Object[] a = enfermedadesYEnfermos.entrySet().toArray();
-        Arrays.sort(a, (Comparator<Object>) (o1, o2) -> ((Map.Entry<String, Integer>) o2).getValue()
+
+
+    public int getCantidadMayorEnfermos(HashMap<String, Integer> hashASortear){ // necesito las enfermedades con mas de 5 o mas enfermos Rehacer el sort de Hashmap<String, Integer>
+        Object[] toArray = hashASortear.entrySet().toArray();
+        Arrays.sort(toArray, (Comparator) (o1, o2) -> ((Map.Entry<String, Integer>) o2).getValue()
                 .compareTo(((Map.Entry<String, Integer>) o1).getValue()));
-        return -1;
+        return  hashASortear.values().stream().findFirst().get(); //Devuelve el valor mayor
     }
+
+    public void ordenarEnfermedadesYEnfermos(){
+        Object[] array = enfermedadesYEnfermos.entrySet().toArray();
+        Arrays.sort(array, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Map.Entry<String, Integer>) o2).getValue()
+                        .compareTo(((Map.Entry<String, Integer>) o1).getValue());
+            }
+        });
+    }
+
 }

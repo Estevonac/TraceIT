@@ -1,12 +1,11 @@
-package ABM;
+package Testers.ABM;
 
+import ABM.*;
 import Exceptions.InvalidDataException;
 import Persistencia.GestorDeArchivos;
 import org.junit.Test;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 public class ABMTest implements GestorDeArchivos {
 

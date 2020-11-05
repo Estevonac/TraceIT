@@ -3,6 +3,8 @@ package ABM;
 import Eventos.Enfermedad;
 import Exceptions.IllegalConditionsException;
 
+import java.io.IOException;
+
 public class Administrador{
 
     protected   String nombreUsuario;
@@ -15,7 +17,7 @@ public class Administrador{
 
     }
 
-    public Enfermedad crearEnfermedad(String nombre){
+    public Enfermedad crearEnfermedad(String nombre) throws IOException {
          return new Enfermedad(nombre);
     }
 

@@ -1,6 +1,5 @@
-package Testers.ABM;
+package ABM;
 
-import ABM.*;
 import Exceptions.InvalidDataException;
 import Persistencia.GestorDeArchivos;
 import org.junit.Test;
@@ -33,7 +32,15 @@ public class ABMTest implements GestorDeArchivos {
         // Como lo chequeo por metodo?
 
         // Chequeado manualmente en datasets y funciona.
+    }
 
+    @Test
+    public void cargarAdministradorDebeAgregarloALaLista() throws InvalidDataException, IOException {
+        ABM abm = new ABM();  //La lista debe empezar vacia y despues de cargar los datos debe estar llena
+        abm.getListaAdministradores();
+        abm.cargarAdministradores();
+        abm.getListaAdministradores();
+        leerArchivo("Administradores");
 
     }
 

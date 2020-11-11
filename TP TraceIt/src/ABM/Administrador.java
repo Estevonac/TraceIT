@@ -2,10 +2,11 @@ package ABM;
 
 import Eventos.Enfermedad;
 import Exceptions.IllegalConditionsException;
+import Persistencia.GestorDeArchivos;
 
 import java.io.IOException;
 
-public class Administrador{
+public class Administrador implements GestorDeArchivos {
 
     protected   String nombreUsuario;
     protected   String contrasena;
@@ -29,7 +30,6 @@ public class Administrador{
         }
         else {throw new IllegalConditionsException("El ciudadano ya esta desbloqueado");}
     }
-
 
     public String getNombreUsuario() {
         return nombreUsuario;

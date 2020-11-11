@@ -4,16 +4,16 @@ import Eventos.Enfermedad;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
-import Persistencia.GestorDeArchivos;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class TraceIT{ //Test del programa
 
-    public static void main(String[] args) throws InvalidDataException {
+    public static void main(String[] args) throws InvalidDataException, IOException {
 
 //Creamos una enfermedad y le pasamos los sintomas de esta
         Enfermedad covid = new Enfermedad("Covid");
@@ -57,6 +57,26 @@ public class TraceIT{ //Test del programa
         System.out.println("Julian esta enfermo?: " + julian.estaEnfermo);
 
 
+    }
+
+
+    private static void cargarArchivos() throws IOException { //Lee los datasets y los carga en el programa
+        String[] datasets = {"Administradores", "Brotes", "AnsesCiudadanos", "Brotes", "Encuentros", "Enfermedades"};
+
+        for (String archivo : datasets) {
+
+            FileReader fileReader = new FileReader(archivo);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String head = bufferedReader.readLine();
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] dato = line.split(",");
+                new Administrador(dato[0],dato[1]);
+            }
+            bufferedReader.close();
+
+        }
     }
 
 

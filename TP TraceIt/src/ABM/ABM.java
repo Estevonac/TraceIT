@@ -1,9 +1,10 @@
 package ABM;
 
-import Exceptions.InexistentUserException;
+import Exceptions.*;
 import Persistencia.GestorDeArchivos;
-import com.sun.media.sound.InvalidDataException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -38,15 +39,10 @@ public class ABM implements GestorDeArchivos {
 
                     editarArchivo("Administradores",viejoAdmin,nuevoAdmin);
                     a.nombreUsuario = nuevoNombre;
-
                 }
-
             }
         }
-        else{
-            throw new InvalidDataException("No existe el administrador");
-        }
-
+        else{ throw new InvalidDataException("No existe el administrador");}
     }
 
     public void cambiarContrasena(Administrador unAdmin, String nuevaContrasena) throws InexistentUserException{
@@ -55,13 +51,11 @@ public class ABM implements GestorDeArchivos {
                 if (a == unAdmin){
                     a.setContrasena(nuevaContrasena);
                 }
-
             }
         }
         else{
             throw new InexistentUserException("No existe el administrador");
         }
-
     }
 
     public void removeAdministrador(Administrador administrador) throws InexistentUserException {
@@ -78,8 +72,20 @@ public class ABM implements GestorDeArchivos {
         ArrayList<String> listaToString = new ArrayList<>();
         for(Administrador admin : listaAdministradores){
             listaToString.add(admin.getNombreUsuario() + "," + admin.getContrasena());
-
         }
         return listaToString;
+    }
+    public void cargarAdministradores() throws IOException { //Lee los datasets y los carga en el programa
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(getRuta("Administradores")));
+        String head = bufferedReader.readLine();
+
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] dato = line.split(",");
+            new Administrador(dato[0],dato[1]);
+        }
+        bufferedReader.close();
+
     }
 }

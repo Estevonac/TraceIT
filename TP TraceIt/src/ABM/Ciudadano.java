@@ -39,7 +39,6 @@ public class Ciudadano implements RastreadorEnfermos {
 
     public void evaluarSintomas() throws IOException { // Metodo para evaluar si un ciudadano esta enfermo.
 
-
         for (Enfermedad unaEnfermedad : getEnfermedadesVigentes()) {
             int sintomasCompartidos = 0;
             for (String sintomaEnfermedad : unaEnfermedad.sintomasEnfermedad) {

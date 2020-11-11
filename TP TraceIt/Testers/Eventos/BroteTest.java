@@ -1,14 +1,13 @@
-package Eventos;
+package Testers.Eventos;
 
 import ABM.Ciudadano;
+import Eventos.Brote;
 import Exceptions.InvalidDataException;
 import Persistencia.GestorDeArchivos;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class BroteTest implements GestorDeArchivos {
 

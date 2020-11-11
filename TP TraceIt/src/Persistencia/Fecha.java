@@ -31,7 +31,7 @@ public class Fecha {
     public int tiempoEntreFechasEnHoras(Fecha segundaFecha){ //Rehacer metodo
 
         int fecha1EnHoras = getMes()*730 + getDia() * 24 + getHora() + getMinuto()/60;
-        int fecha2EnHoras = getMes()*730 + getDia() *24 + getHora() + getMinuto()/60;
+        int fecha2EnHoras = segundaFecha.getMes()*730 + segundaFecha.getDia() *24 + segundaFecha.getHora() + segundaFecha.getMinuto()/60;
 
         return Math.abs(fecha2EnHoras - fecha1EnHoras);
 

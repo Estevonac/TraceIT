@@ -4,6 +4,7 @@ import ABM.Ciudadano;
 import Persistencia.Fecha;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 //import static Evento.Enfermedad.getEnfermedadesVigentes;
 
@@ -33,16 +34,13 @@ public class Encuentro implements RastreadorEnfermos{
         ArrayList<String> sintomasContacto = new ArrayList<>();
 
         for (Ciudadano unCiudadano: this.getInvitados()) {
-            for (String s : unCiudadano.mostrarSintomas()) {
-                if (!sintomasContacto.contains(s)) {
-                    sintomasContacto.add(s);
-
+            for (String sintomaCiudadano : unCiudadano.mostrarSintomas()) {
+                if (!sintomasContacto.contains(sintomaCiudadano)) {
+                    sintomasContacto.add(sintomaCiudadano);
                 }
             }
             for (String sintoma : sintomasContacto) {//En un encuentro, una persona tiene un 60% de chance de contagiarse un sintoma de otro ciudadano
-                if ((Math.random() * 100) >= 40) {
-                    unCiudadano.presenciaSintomas(sintoma, getFechaHasta()); //Utilizamos la fecha de finalizacion
-                }
+                if ((Math.random() * 100) >= 40) { unCiudadano.presenciaSintomas(sintoma, getFechaHasta());}
             }
             unCiudadano.evaluarSintomas();
 
@@ -52,6 +50,7 @@ public class Encuentro implements RastreadorEnfermos{
 
         }
         ordenarEnfermedadesYEnfermos(); //Testear metodo
+         enfermedadesYEnfermos.entrySet().stream().filter( e -> e.getValue() >= 5).collect(Collectors.toList()); // Probar este tambien. Recolectar la enfermedad y la cant de enfermos para el brote
         enfermedadesYEnfermos.entrySet().forEach((entry) ->
         {if(entry.getValue()>=5){
             try {

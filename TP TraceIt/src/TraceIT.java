@@ -1,84 +1,121 @@
-import ABM.Administrador;
-import ABM.Ciudadano;
-import Eventos.Enfermedad;
-import Exceptions.InexistentUserException;
+import ABM.*;
 import Exceptions.InvalidDataException;
-import Persistencia.Fecha;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class TraceIT{ //Test del programa
+    static ABM abm = new ABM();
 
     public static void main(String[] args) throws InvalidDataException, IOException {
-
-//Creamos una enfermedad y le pasamos los sintomas de esta
-        Enfermedad covid = new Enfermedad("Covid");
-        covid.addSintomas("tos");
-        covid.addSintomas("dolor muscular");
-        covid.addSintomas("fiebre");
-        covid.addSintomas("falta de aire");
-
-//Creamos usuarios
-        ArrayList<Ciudadano> participantes = new ArrayList<>();
-        Administrador juan = new Administrador("Juan", "admin123");
-        Ciudadano pedro = new Ciudadano("201234560","11223344", "Pilar");
-        Ciudadano julian = new Ciudadano("2044112250", "55667788", "CABA");
-        participantes.add(julian);
-
-
-//Registramos los sintomas de cada usuario y mostramos el estado de si presentan la enfermedad antes creada
-        pedro.presenciaSintomas("tos", new Fecha(10,10,9,12));
-        pedro.presenciaSintomas("dolor muscular",new Fecha(10,10,12,30));
-        julian.presenciaSintomas("fiebre",new Fecha(10,9,12,30));
-        julian.presenciaSintomas("tos",new Fecha(10,10,12,30));
-
-        pedro.mostrarSintomas();
-        julian.mostrarSintomas();
-
-        System.out.println("Pedro esta enfermo?: " + pedro.estaEnfermo);
-        System.out.println("Julian esta enfermo?: " + julian.estaEnfermo);
-
-// Generamos un contacto entre 2 ciudadanos, ahi tambien reevaluamos el estado de enfermedad y mostramos los nuevos sintomas
-        try {
-            pedro.solicitarContacto(participantes,new Fecha(10,10,9,12),new Fecha(10,9,14,30),"Pilar"); //El metodo no esta completo y no funciona adecuadamente todavia
-        } catch (InexistentUserException e) {
-            e.printStackTrace();
-        }
-
-        pedro.mostrarSintomas();
-        julian.mostrarSintomas();
-
-//Imprimimos si los ciudadanos contrayeron la enfermedad despues del contacto
-        System.out.println("Pedro esta enfermo?: " + pedro.estaEnfermo);
-        System.out.println("Julian esta enfermo?: " + julian.estaEnfermo);
-
+        cargarArchivos();
+        traceITinterfaz();
+        guardarArchivos();
 
     }
 
 
     private static void cargarArchivos() throws IOException { //Lee los datasets y los carga en el programa
-        String[] datasets = {"Administradores", "Brotes", "AnsesCiudadanos", "Brotes", "Encuentros", "Enfermedades"};
+       ABM.cargarAdministradores();
+       //ABM.ABM.cargarCiudadanos();
+        //Eventos.enfermedad.cargarEnfermedades();
+        //Eventos.Brotes.cargarBrotes();
+    }
+    private static void guardarArchivos() {
 
-        for (String archivo : datasets) {
 
-            FileReader fileReader = new FileReader(archivo);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String head = bufferedReader.readLine();
 
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] dato = line.split(",");
-                new Administrador(dato[0],dato[1]);
+    }
+
+    private static void traceITinterfaz() throws IOException {
+    Scanner input = new Scanner(System.in);
+        while(true){
+
+            System.out.println("\n" + "------------------------------------" + "\n" +
+
+                    "TraceIT" + "\n" +
+                    "\n" +
+                    "1. Registrarse" + "\n" +
+                    "2. Iniciar sesion como Ciudadano" + "\n" +
+                    "3. Iniciar sesion como Administrador" + "\n" +
+                    "4. Salir" + "\n");
+            switch  (input.nextInt()){
+                case 1:
+                    clearScreen();
+                    registrar();
+                    break;
+                case 2:
+                    clearScreen();
+                    loginUsuario();
+                    break;
+                case 3:
+                    clearScreen();
+                    loginAdmin();
+                    break;
+                case 4:
+                    clearScreen();
+                    return;
+                default:
+                    System.out.println("Opcion invalida");
+                    break;
             }
-            bufferedReader.close();
-
         }
+    }
+
+    private static void clearScreen() {
+        for (int i = 0; i < 25; ++i) System.out.println();
+    }
+
+    private static void registrar() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Ingrese CUIL");
+        String cuil = input.nextLine();
+
+        System.out.println("Ingrese numero de telefono");
+        String telefono = input.nextLine();
+
+        System.out.println("Ingrese zona");
+        String zona = input.nextLine();
+        try {
+            abm.agregarCiudadano(new Ciudadano(cuil,telefono,zona));
+            clearScreen();
+            System.out.println("Registro existoso");
+
+        } catch (IOException | InvalidDataException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void loginUsuario() throws IOException {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Ingrese su CUIL");
+        String cuil = input.nextLine();
+
+        System.out.println("Ingrese su numero de telefono");
+        String telefono = input.nextLine();
+
+        clearScreen();
+        abm.ciudadanoChequeo(cuil,telefono); // Chequea que los datos sean correctos
+    }
+
+    private static void loginAdmin() throws IOException {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Ingrese nombre");
+        String nombre = input.nextLine();
+
+        System.out.println("Ingrese contrasena");
+        String contrasena = input.nextLine();
+
+        clearScreen();
+        abm.adminChequeo(nombre,contrasena);
     }
 
 
 }
+
+
+
 

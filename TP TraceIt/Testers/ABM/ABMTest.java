@@ -2,6 +2,7 @@ package ABM;
 
 import Exceptions.InvalidDataException;
 import Persistencia.GestorDeArchivos;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -41,11 +42,12 @@ public class ABMTest implements GestorDeArchivos {
         abm.cargarAdministradores();
         abm.getListaAdministradores();
         leerArchivo("Administradores");
+        Assert.assertEquals(abm.getListaAdministradores().size(),2);
 
     }
 
     @Test
     public void mostrarAdministradoresFromFile() throws IOException {
-        leerArchivo("Administradores"); // Como chequeo con assert?
+        leerArchivo("Administradores");
     }
 }

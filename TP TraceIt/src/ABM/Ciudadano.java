@@ -167,6 +167,10 @@ public class Ciudadano implements RastreadorEnfermos {
     public Enfermedad getEnfermedadActual(){ return enfermedadActual;}
 
     public String getNombreEnfermedadActual(){ return enfermedadActual.getNombre();}
+
+    public String getZona() {
+        return zona;
+    }
 }
 
 

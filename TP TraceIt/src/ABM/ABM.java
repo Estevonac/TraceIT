@@ -29,6 +29,16 @@ public class ABM implements GestorDeArchivos {
             listaAdministradores.add(administrador);
         }
     }
+    public void agregarCiudadano(Ciudadano unCiudadano) throws InvalidDataException, IOException {
+        if(listaCiudadanos.contains(unCiudadano.getNumeroTelefono())){
+            throw new InvalidDataException("Ciudadano ya existente");
+        }
+        else {
+            String ciudadanoDatos = unCiudadano.getCuil() + "," + unCiudadano.getNumeroTelefono() + "," + unCiudadano.getZona();
+            escribirArchivo("AnsesCiudadanos",ciudadanoDatos);
+            listaCiudadanos.add(unCiudadano);
+        }
+    }
 
     public void cambiarNombre(Administrador unAdmin, String nuevoNombre) throws InvalidDataException, IOException {
         if (listaAdministradores.contains(unAdmin)){
@@ -75,9 +85,9 @@ public class ABM implements GestorDeArchivos {
         }
         return listaToString;
     }
-    public void cargarAdministradores() throws IOException { //Lee los datasets y los carga en el programa
+    public static void cargarAdministradores() throws IOException { //Lee los datasets y los carga en el programa
 
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(getRuta("Administradores")));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("src/Datasets/Administradores"));
         String head = bufferedReader.readLine();
 
         String line;
@@ -87,5 +97,23 @@ public class ABM implements GestorDeArchivos {
         }
         bufferedReader.close();
 
+    }
+
+    public void ciudadanoChequeo (String cuil, String telefono) throws IOException {
+        for (Ciudadano ciudadano : listaCiudadanos) {
+
+                 if (!ciudadano.getCuil().equals(cuil) || !ciudadano.getNumeroTelefono().equals(telefono)){
+                    throw new IOException("Datos incorrectos");
+                }
+        }
+    }
+
+    public void adminChequeo(String nombre, String contrasena) throws IOException {
+        for (Administrador admin : listaAdministradores) {
+
+            if (!admin.getNombreUsuario().equals(nombre) || !admin.getContrasena().equals(contrasena)){
+                throw new IOException("Datos incorrectos");
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@ public class SolicitudEncuentro {
         this.fechaHasta = fechaHasta;
         this.participantesConfirmados = new ArrayList<>();
         this.zona = zona;
+        emisor.solicitudEnviada = this;
 
     }
 
@@ -53,6 +54,10 @@ public class SolicitudEncuentro {
                 this.emisor.solicitudesCounter ++;
             }
         }
+    }
+
+    public Ciudadano getEmisor() {
+        return emisor;
     }
 
     public boolean getEstadoSolicitudParticipante(Ciudadano unCiudadano){ return unCiudadano.getEstadoSolicitud(this); }

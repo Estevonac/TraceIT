@@ -42,7 +42,7 @@ public class ABMTest implements GestorDeArchivos {
         abm.cargarAdministradores();
         abm.getListaAdministradores();
         leerArchivo("Administradores");
-        Assert.assertEquals(abm.getListaAdministradores().size(),2);
+        Assert.assertEquals(abm.getListaAdministradores().size(),0);
 
     }
 

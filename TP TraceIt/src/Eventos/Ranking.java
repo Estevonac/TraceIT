@@ -36,7 +36,7 @@ public class Ranking implements GestorDeArchivos {
         bufferedReader.close();
     }
 
-    private void persistirRanking() throws IOException { //Despues de crearlo hay que llenarlo con los datasets
+    public  void persistirRanking() throws IOException { //Despues de crearlo hay que llenarlo con los datasets
         escribirArchivo("ZonasContagiadas",getRankingZonasYEnfermos().toString());
     }
     public void sortMayorEnfermos() throws IOException { // Implementar sorts
@@ -66,7 +66,7 @@ public class Ranking implements GestorDeArchivos {
         sortMenorEnfermos();
         return getRankingZonasYEnfermos();
     }
-
+    //Mostrar solo el top 3
     public HashMap<String, Integer> mostrarRankingMayorEnfermos() throws IOException { // muestra la zona con mayor cantidad de contagios
         this.sortMayorEnfermos();
         return getRankingZonasYEnfermos();

@@ -87,7 +87,7 @@ public class ABM implements GestorDeArchivos {
     }
     public static void cargarAdministradores() throws IOException { //Lee los datasets y los carga en el programa
 
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("src/Datasets/Administradores"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(GestorDeArchivos.getRuta("Administradores")));
         String head = bufferedReader.readLine();
 
         String line;
@@ -99,21 +99,49 @@ public class ABM implements GestorDeArchivos {
 
     }
 
-    public void ciudadanoChequeo (String cuil, String telefono) throws IOException {
-        for (Ciudadano ciudadano : listaCiudadanos) {
+    public ArrayList<String> getListaCiudadanos(){
 
-                 if (!ciudadano.getCuil().equals(cuil) || !ciudadano.getNumeroTelefono().equals(telefono)){
-                    throw new IOException("Datos incorrectos");
-                }
+        ArrayList<String> listaToString = new ArrayList<>();
+        for(Ciudadano ciudadano : listaCiudadanos){
+            listaToString.add(ciudadano.getCuil() + "," + ciudadano.getNumeroTelefono() + "," + ciudadano.getZona());
         }
+        return listaToString;
     }
 
-    public void adminChequeo(String nombre, String contrasena) throws IOException {
+    public Ciudadano ciudadanoChequeo (String cuil, String telefono) throws IOException { //Chequear porque los devuelve null
+        Ciudadano ciudadanoActivo = null;
+        for (Ciudadano ciudadano : listaCiudadanos) {
+
+            if (!ciudadano.getCuil().equals(cuil) || !ciudadano.getNumeroTelefono().equals(telefono)) {
+                throw new IOException("Datos incorrectos");
+            } else {
+                ciudadanoActivo = ciudadano;
+            }
+        }
+        return ciudadanoActivo;
+    }
+    public Administrador adminChequeo(String nombre, String contrasena) throws IOException {
+        Administrador adminActivo = null;
         for (Administrador admin : listaAdministradores) {
 
             if (!admin.getNombreUsuario().equals(nombre) || !admin.getContrasena().equals(contrasena)){
                 throw new IOException("Datos incorrectos");
             }
+            else {
+                adminActivo = admin;
+            }
         }
+        return adminActivo;
+    }
+
+    public Ciudadano getCiudadanoPorCuil(String cuil) throws InexistentUserException {
+
+        for (Ciudadano ciudadano : listaCiudadanos){
+            if (ciudadano.getCuil().equals(cuil)){
+                return ciudadano;
+            }
+            else { throw new InexistentUserException("El ciudadano no existe"); }
+        }
+        return null;
     }
 }

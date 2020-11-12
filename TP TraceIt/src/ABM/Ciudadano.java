@@ -21,6 +21,7 @@ public class Ciudadano implements RastreadorEnfermos {
     public ArrayList<String> sintomas;
     public ArrayList<SolicitudEncuentro> solicitudesRecibidas, proximosEncuentros;
     private final String zona;
+    public SolicitudEncuentro solicitudEnviada;
     private Encuentro encuentroActual;
     private Enfermedad enfermedadActual;
 
@@ -34,6 +35,7 @@ public class Ciudadano implements RastreadorEnfermos {
         sintomas = new ArrayList<>();
         solicitudesRecibidas = new ArrayList<>();
         this.zona = zona;
+        solicitudEnviada = null;
     }
 
 
@@ -111,7 +113,7 @@ public class Ciudadano implements RastreadorEnfermos {
         }
     }
     //En el caso de que ya tenga el sintoma, se elimina el viejo y se anade el nuevo. Usamos esto para actualizar la fecha
-    public void presenciaSintomas(String nuevoSintoma, Fecha fechaSintoma){
+    public void presenciaSintomas(String nuevoSintoma, Fecha fechaSintoma) throws IOException {
         for (String sintomaYaPresente : sintomas){
             if (sintomaYaPresente.equals(nuevoSintoma)){
                 sintomas.remove(sintomaYaPresente);
@@ -119,11 +121,14 @@ public class Ciudadano implements RastreadorEnfermos {
             }
         }
         sintomas.add(nuevoSintoma);
+        evaluarSintomas();
     }
 
-    private void eliminarSintoma(String unSintoma, Fecha fechaFin){ // Elimina sintomas a un ciudadano
+    public void eliminarSintoma(String unSintoma, Fecha fechaFin) throws IOException { // Elimina sintomas a un ciudadano
         sintomas.remove(unSintoma);
+        evaluarSintomas();
     }
+    public Ciudadano getEmisorSolicitud(SolicitudEncuentro unaSolicitud){ return unaSolicitud.getEmisor();}
 
     public ArrayList<String> mostrarSintomas(){
         return sintomas;
@@ -166,11 +171,16 @@ public class Ciudadano implements RastreadorEnfermos {
 
     public Enfermedad getEnfermedadActual(){ return enfermedadActual;}
 
-    public String getNombreEnfermedadActual(){ return enfermedadActual.getNombre();}
-
-    public String getZona() {
-        return zona;
+    public String getNombreEnfermedadActual(){
+        if (estaEnfermo) {
+            return enfermedadActual.getNombre();
+        }
+        else {return "No esta enfermo";}
     }
+
+    public String getZona() { return zona; }
+
+    public SolicitudEncuentro getSolicitudEnviada() { return solicitudEnviada; }
 }
 
 

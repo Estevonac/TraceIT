@@ -4,12 +4,13 @@ import java.io.*;
 
 public interface GestorDeArchivos { // Interfaz que se va a encargar de la persistencia.
 
-    default String getRuta(String archivo) throws IOException {
-        return "src/Datasets/" + archivo + ".txt";
+    static String getRuta(String archivo) throws IOException {
+        return "TP TraceIT/src/Datasets/" + archivo + ".txt";
     }
 
 
     default void leerArchivo(String archivo) throws IOException {
+
         BufferedReader bufferedReader = new BufferedReader(new FileReader(getRuta(archivo)));
 
         String head = bufferedReader.readLine();

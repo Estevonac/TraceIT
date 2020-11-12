@@ -1,13 +1,22 @@
 import ABM.*;
+import Eventos.Ranking;
+import Exceptions.IllegalConditionsException;
+import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
+import Persistencia.Fecha;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class TraceIT{ //Test del programa
     static ABM abm = new ABM();
+    static Administrador adminVigente;
+    static Ciudadano ciudadanoVigente;
 
-    public static void main(String[] args) throws InvalidDataException, IOException {
+    public static void main(String[] args) throws InvalidDataException, IOException, IllegalConditionsException, InexistentUserException {
         cargarArchivos();
         traceITinterfaz();
         guardarArchivos();
@@ -21,13 +30,13 @@ public class TraceIT{ //Test del programa
         //Eventos.enfermedad.cargarEnfermedades();
         //Eventos.Brotes.cargarBrotes();
     }
-    private static void guardarArchivos() {
+    private static void guardarArchivos() throws IOException {
 
-
+    //Ranking.persistirRanking();
 
     }
 
-    private static void traceITinterfaz() throws IOException {
+    private static void traceITinterfaz() throws IOException, InvalidDataException, IllegalConditionsException, InexistentUserException {
     Scanner input = new Scanner(System.in);
         while(true){
 
@@ -39,25 +48,24 @@ public class TraceIT{ //Test del programa
                     "2. Iniciar sesion como Ciudadano" + "\n" +
                     "3. Iniciar sesion como Administrador" + "\n" +
                     "4. Salir" + "\n");
-            switch  (input.nextInt()){
-                case 1:
+            switch (input.nextInt()) {
+                case 1 -> {
                     clearScreen();
                     registrar();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     clearScreen();
                     loginUsuario();
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     clearScreen();
                     loginAdmin();
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     clearScreen();
                     return;
-                default:
-                    System.out.println("Opcion invalida");
-                    break;
+                }
+                default -> System.out.println("Opcion invalida");
             }
         }
     }
@@ -69,13 +77,13 @@ public class TraceIT{ //Test del programa
     private static void registrar() {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Ingrese CUIL");
+        System.out.print("Ingrese CUIL: ");
         String cuil = input.nextLine();
 
-        System.out.println("Ingrese numero de telefono");
+        System.out.print("Ingrese numero de telefono: ");
         String telefono = input.nextLine();
 
-        System.out.println("Ingrese zona");
+        System.out.print("Ingrese zona: ");
         String zona = input.nextLine();
         try {
             abm.agregarCiudadano(new Ciudadano(cuil,telefono,zona));
@@ -87,33 +95,314 @@ public class TraceIT{ //Test del programa
         }
     }
 
-    private static void loginUsuario() throws IOException {
+    private static void loginUsuario() throws IOException, InvalidDataException, IllegalConditionsException, InexistentUserException {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Ingrese su CUIL");
+        System.out.print("Ingrese su CUIL: ");
         String cuil = input.nextLine();
 
-        System.out.println("Ingrese su numero de telefono");
+        System.out.print("Ingrese su numero de telefono: ");
         String telefono = input.nextLine();
 
         clearScreen();
-        abm.ciudadanoChequeo(cuil,telefono); // Chequea que los datos sean correctos
+        ciudadanoVigente = abm.ciudadanoChequeo(cuil,telefono); // Chequea que los datos sean correctos
+        pantallaCiudadano();
+
     }
 
-    private static void loginAdmin() throws IOException {
+    private static void loginAdmin() throws IOException, InvalidDataException, InexistentUserException, IllegalConditionsException {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Ingrese nombre");
+        System.out.print("Ingrese nombre: ");
         String nombre = input.nextLine();
 
-        System.out.println("Ingrese contrasena");
+        System.out.print("Ingrese contrasena: ");
         String contrasena = input.nextLine();
 
         clearScreen();
-        abm.adminChequeo(nombre,contrasena);
+        adminVigente = abm.adminChequeo(nombre,contrasena);
+        pantallaAdmin();
     }
 
+    private static void pantallaAdmin() throws InvalidDataException, IOException, InexistentUserException, IllegalConditionsException {
+        Scanner scanner = new Scanner(System.in);
 
+        clearScreen();
+        System.out.println("Inicio de sesion exitosa");
+        while(true){
+            System.out.println("\n" + "------------------------------------" + "\n" +
+
+                    "TraceIT Administradores" + "\n" +
+                    "1. Crear Nuevo Admin" + "\n" +
+                    "2. Eliminar Admin" + "\n" +
+                    "3. Crear enfermedad" + "\n" +
+                    "4. Ver lista Clientes" + "\n" +
+                    "5. Bloquear ciudadano" + "\n" +
+                    "6. Desbloquear ciudadano" + "\n" +
+                    "7. Ver ranking" + "\n" +
+                    "8. Cerrar sesion" + "\n");
+
+            switch (scanner.nextInt()) {
+                case 1 -> {
+                    clearScreen();
+                    crearAdmin();
+                }
+                case 2 -> {
+                    clearScreen();
+                    eliminarAdmin();
+                }
+                case 3 -> {
+                    clearScreen();
+                    crearEnfermedad();
+                }
+                case 4 -> {
+                    clearScreen();
+                    verListaCiudadanos();
+                }
+                case 5 -> {
+                    clearScreen();
+                    bloquearCiudadano();
+                }
+                case 6 -> {
+                    clearScreen();
+                    desbloquearCiudadano();
+                }
+                case 7 -> {
+                    clearScreen();
+                    verRanking();
+                }
+                case 8 -> {
+                    clearScreen();
+                    adminVigente = null;
+                    traceITinterfaz();
+                }
+                default -> System.out.println("Opcion invalida");
+            }
+        }
+    }
+
+    private static void crearAdmin() throws InvalidDataException, IOException {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Ingrese nombre de administrador: ");
+        String nombre = input.nextLine();
+
+        System.out.print("Ingrese la contraseña");
+        String contrasena = input.nextLine();
+
+        abm.addAdministrador(new Administrador(nombre,contrasena));
+    }
+
+    private static void eliminarAdmin() throws InexistentUserException {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Ingrese nombre de administrador: ");
+        String nombre = input.nextLine();
+
+        System.out.print("Ingrese la contraseña");
+        String contrasena = input.nextLine();
+
+        abm.removeAdministrador(new Administrador(nombre,contrasena));
+    }
+
+    private static void crearEnfermedad() throws IOException {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Ingrese el nombre de la enfermedad: ");
+        String enfermedad = input.nextLine();
+
+        System.out.print("Ingrese los sintomas relacionados: ");
+        String sintomasIngresados = input.nextLine();
+        ArrayList<String> sintomas = new ArrayList<>(Arrays.asList(sintomasIngresados.split(",")));
+
+        adminVigente.crearEnfermedad(enfermedad,sintomas);
+    }
+
+    private static void verListaCiudadanos() {
+        System.out.println(abm.getListaCiudadanos());
+    }
+    private static void bloquearCiudadano() throws InvalidDataException, IllegalConditionsException { // Mejorar para que solo sea necesario el CUIL
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Ingrese el CUIL del ciudadano a bloquear: ");
+        String cuil = input.nextLine();
+
+        System.out.print("Ingrese el telefono del ciudadano a bloquear: ");
+        String telefono = input.nextLine();
+
+        System.out.print("Ingrese la zona del ciudadano a bloquear: ");
+        String zona = input.nextLine();
+
+        adminVigente.bloquarCiudadano(new Ciudadano(cuil,telefono,zona));
+    }
+    private static void desbloquearCiudadano() throws InvalidDataException, IllegalConditionsException { // Mejorar para que solo sea necesario el CUIL
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Ingrese el CUIL del ciudadano a bloquear: ");
+        String cuil = input.nextLine();
+
+        System.out.print("Ingrese el telefono del ciudadano a bloquear: ");
+        String telefono = input.nextLine();
+
+        System.out.print("Ingrese la zona del ciudadano a bloquear: ");
+        String zona = input.nextLine();
+
+        adminVigente.desbloquarCiudadano(new Ciudadano(cuil,telefono,zona));
+    }
+
+    private static void verRanking() throws IOException {
+        Ranking unRanking = new Ranking();
+        unRanking.mostrarRankingMayorEnfermos();
+
+    }
+
+    private static void pantallaCiudadano() throws IOException, InexistentUserException, InvalidDataException, IllegalConditionsException {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Inicio de sesion exitosa");
+        while (true) {
+            System.out.println("\n" + "------------------------------------" + "\n" +
+
+                    "TraceIT Ciudadanos" + "\n" +
+                    "Cuil: " + ciudadanoVigente.getCuil() + "\n" +
+                    "Sintomas: " + ciudadanoVigente.mostrarSintomas() + "\n" +
+                    "Enfermedad: " + ciudadanoVigente.getNombreEnfermedadActual() + "\n");
+
+            System.out.println("Que desea hacer?" + "\n" +
+                    "1. Presentar Sintomas" + "\n" +
+                    "2. Eliminar sintomas" + "\n" +
+                    "3. Mostrar sintomas" + "\n" +
+                    "4. Solicitar encuentro" + "\n" +
+                    "5. Mostrar solicitudes" + "\n" +
+                    "6. Cerrar sesion" + "\n");
+
+            switch (input.nextInt()) {
+                case 1 -> {
+                    clearScreen();
+                    presentarSintomas();
+                }
+                case 2 -> {
+                    clearScreen();
+                    eliminarSintomas();
+                }
+                case 3 -> {
+                    clearScreen();
+                    mostrarSintomas();
+                }
+                case 4 -> {
+                    clearScreen();
+                    solicitarUnEncuentro();
+                }
+                case 5 -> {
+                    clearScreen();
+                    mostrarSolicitudes();
+                    return;
+                }
+                case 6 -> {
+                    clearScreen();
+                    traceITinterfaz();
+                    return;
+                }
+                default -> System.out.println("Opcion invalida");
+            }
+
+        }
+    }
+
+    private static void presentarSintomas() throws IOException {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Ingrese el sintoma: ");
+        String sintoma = input.nextLine();
+
+        System.out.println("Ingrese la fecha en formato d/m hh:mm: ");
+        String fecha = input.nextLine();
+
+        ciudadanoVigente.presenciaSintomas(sintoma, toFecha(fecha));
+    }
+
+    private static Fecha toFecha(String fecha){
+        int dia = Integer.parseInt(Arrays.toString(fecha.split("/")));
+        int mes = Integer.parseInt(fecha.substring(fecha.indexOf("/"),fecha.indexOf(" ")));
+        int hora = Integer.parseInt(fecha.substring(fecha.indexOf(" ", fecha.indexOf(":"))));
+        int minuto = Integer.parseInt(fecha.substring(fecha.indexOf(":",fecha.length())));
+
+        return new Fecha(dia,mes,hora,minuto);
+    }
+
+    private static void eliminarSintomas() throws IOException {
+        Scanner input  = new Scanner(System.in);
+
+        System.out.println("Ingrese el sintoma: ");
+        String sintoma = input.nextLine();
+
+        System.out.println("Ingrese la fecha en formato d/m hh:mm: ");
+        String fecha = input.nextLine();
+
+        ciudadanoVigente.eliminarSintoma(sintoma,toFecha(fecha));
+    }
+
+    private static void mostrarSintomas() {
+        ciudadanoVigente.mostrarSintomas();
+    }
+
+    private static void solicitarUnEncuentro() throws InexistentUserException {
+        Scanner input = new Scanner(System.in);
+        ArrayList<Ciudadano> participantes = new ArrayList<>();
+
+        System.out.println("Ingresa la cantidad de participantes");
+        int cantParticipantes = input.nextInt();
+
+        for (int i = 1; i <= cantParticipantes; i++) {
+            System.out.print("Ingrese el Cuil del participante " + i + ": ");
+            String cuil = input.nextLine();
+            participantes.add(abm.getCiudadanoPorCuil(cuil));
+        }
+        System.out.print("Ingrese la fecha de inicio, en formato d/m H:M : ");
+        Fecha fechaDesde = toFecha(input.nextLine());
+
+        System.out.print("Ingrese la fecha de finalizacion, en formato d/m H:M : ");
+        Fecha fechaHasta = toFecha(input.nextLine());
+
+        System.out.println("Ingrese la zona del encuentro: ");
+        String zona = input.nextLine();
+
+        ciudadanoVigente.solicitarContacto(participantes,fechaDesde,fechaHasta,zona);
+    }
+
+    private static void mostrarSolicitudes() throws InexistentUserException, InvalidDataException, IOException, IllegalConditionsException {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Solicitudes recibidas: ");
+        ciudadanoVigente.mostrarSolicitudesRecibidas();
+
+        System.out.print("Desea aceptar / rechazar alguna? ");
+        String respuesta = input.nextLine();
+
+        if (respuesta.equalsIgnoreCase("si")){
+            System.out.println("La solicitud de que emisor quieres aceptar/rechazar? Introduce su CUIL: ");
+            String cuil = input.nextLine();
+            Ciudadano emisor = abm.getCiudadanoPorCuil(cuil);
+
+            System.out.println("Desea aceptarla o rechazarla?");
+            String respuesta2 = input.nextLine();
+
+            if (respuesta2.equalsIgnoreCase("aceptar")){
+                ciudadanoVigente.aceptarSolicitud(emisor.getSolicitudEnviada());
+            }
+            else if(respuesta2.equalsIgnoreCase("rechazar")){
+                ciudadanoVigente.rechazarSolicitud(emisor.getSolicitudEnviada());
+            }
+            else {
+                System.out.println("La respuesta puede ser aceptar o rechazar. Proba nuevamente");
+            }
+        }
+        else if(respuesta.equalsIgnoreCase("no")){
+            pantallaCiudadano();
+        }
+        else{
+            System.out.println("La respuesta puede ser si o no. Proba nuevamente");
+            mostrarSolicitudes();
+        }
+    }
 }
 
 

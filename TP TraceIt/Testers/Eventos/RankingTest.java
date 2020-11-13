@@ -1,24 +1,36 @@
-package Testers.Eventos;
+package Eventos;
 
-import java.util.ArrayList;
+import org.junit.Test;
+
+import java.io.IOException;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RankingTest {
 
 
+    @Test
+     public void sortMayorDebeOrdenarElHashmap() throws IOException {
+        Ranking unRanking = new Ranking();
+        Ranking otroRanking = new Ranking();
 
-     public HashMap<String, Integer> sortMayor(){
          HashMap<String, Integer> hashmapSorteado = new HashMap<>();
-         hashmapSorteado.put("Pilar",10);
-         hashmapSorteado.put("Escobar", 57);
-         hashmapSorteado.put("Nordelta",510);
+         hashmapSorteado.put("Pilar",100);
+         hashmapSorteado.put("Escobar", 50);
+         hashmapSorteado.put("Nordelta",10);
 
+         unRanking.anadirHashmapARanking(hashmapSorteado);
 
+         HashMap<String, Integer> hashmapASortear = new HashMap<>();
+         hashmapASortear.put("Escobar", 50);
+         hashmapASortear.put("Nordelta",10);
+         hashmapASortear.put("Pilar",100);
 
+         otroRanking.anadirHashmapARanking(hashmapASortear);
 
-         return hashmapSorteado;
+         otroRanking.sortMayorEnfermos();
+         assertEquals(unRanking.getRankingZonasYEnfermos(),otroRanking.getRankingZonasYEnfermos()); //Test Pasa
      }
 
 }

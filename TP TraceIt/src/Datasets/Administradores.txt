@@ -2,5 +2,3 @@ nombre,contrasena
 nuevoJuansito,admin123
 jorge,jorge123
 JuanAdmin,admin123
-nuevoJuansito,admin123
-jorge,jorge123

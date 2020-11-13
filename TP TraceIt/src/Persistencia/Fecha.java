@@ -26,7 +26,11 @@ public class Fecha {
         return minuto;
     }
 
-    public String getFechaAsString(){ return (getDia() +  "/" +getMes() + " " + getHora() + ":" + getMinuto());}
+    public String getFechaAsString(){
+        if (getDia()<10){
+
+        }
+        return (getDia() +  "/" +getMes() + " " + getHora() + ":" + getMinuto());}
 
     public int tiempoEntreFechasEnHoras(Fecha segundaFecha){ //Rehacer metodo
 

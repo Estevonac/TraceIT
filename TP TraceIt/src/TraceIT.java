@@ -1,4 +1,6 @@
-import ABM.*;
+import ABM.ABM;
+import ABM.Administrador;
+import ABM.Ciudadano;
 import Eventos.Ranking;
 import Exceptions.IllegalConditionsException;
 import Exceptions.InexistentUserException;
@@ -7,7 +9,6 @@ import Persistencia.Fecha;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -25,7 +26,7 @@ public class TraceIT{ //Test del programa
 
 
     private static void cargarArchivos() throws IOException { //Lee los datasets y los carga en el programa
-       ABM.cargarAdministradores();
+       //ABM.cargarAdministradores();
        //ABM.ABM.cargarCiudadanos();
         //Eventos.enfermedad.cargarEnfermedades();
         //Eventos.Brotes.cargarBrotes();
@@ -211,10 +212,12 @@ public class TraceIT{ //Test del programa
         System.out.print("Ingrese el nombre de la enfermedad: ");
         String enfermedad = input.nextLine();
 
-        System.out.print("Ingrese los sintomas relacionados: ");
-        String sintomasIngresados = input.nextLine();
-        ArrayList<String> sintomas = new ArrayList<>(Arrays.asList(sintomasIngresados.split(",")));
-
+        System.out.print("Ingrese la cantidad de sintomas relacionados: ");
+        int cantidadSintomas = input.nextInt();
+        ArrayList<String> sintomas = new ArrayList<>();
+        for (int i = 0; i < cantidadSintomas; i++) {
+            sintomas.add(input.nextLine());
+        }
         adminVigente.crearEnfermedad(enfermedad,sintomas);
     }
 
@@ -314,17 +317,17 @@ public class TraceIT{ //Test del programa
         System.out.print("Ingrese el sintoma: ");
         String sintoma = input.nextLine();
 
-        System.out.println("Ingrese la fecha en formato d/m hh:mm: ");
+        System.out.println("Ingrese la fecha en formato dd/mm hh:mm: ");
         String fecha = input.nextLine();
 
         ciudadanoVigente.presenciaSintomas(sintoma, toFecha(fecha));
     }
 
     private static Fecha toFecha(String fecha){
-        int dia = Integer.parseInt(Arrays.toString(fecha.split("/")));
-        int mes = Integer.parseInt(fecha.substring(fecha.indexOf("/"),fecha.indexOf(" ")));
-        int hora = Integer.parseInt(fecha.substring(fecha.indexOf(" ", fecha.indexOf(":"))));
-        int minuto = Integer.parseInt(fecha.substring(fecha.indexOf(":",fecha.length())));
+        int dia = Integer.parseInt(fecha.substring(0,2));
+        int mes = Integer.parseInt(fecha.substring(3,5));
+        int hora = Integer.parseInt(fecha.substring(6,8));
+        int minuto = Integer.parseInt(fecha.substring(9));
 
         return new Fecha(dia,mes,hora,minuto);
     }
@@ -335,7 +338,7 @@ public class TraceIT{ //Test del programa
         System.out.println("Ingrese el sintoma: ");
         String sintoma = input.nextLine();
 
-        System.out.println("Ingrese la fecha en formato d/m hh:mm: ");
+        System.out.println("Ingrese la fecha en formato dd/mm hh:mm: ");
         String fecha = input.nextLine();
 
         ciudadanoVigente.eliminarSintoma(sintoma,toFecha(fecha));

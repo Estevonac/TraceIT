@@ -4,7 +4,7 @@ import java.io.*;
 
 public interface GestorDeArchivos { // Interfaz que se va a encargar de la persistencia.
 
-    static String getRuta(String archivo) throws IOException {
+    default String getRuta(String archivo) throws IOException {
         return "TP TraceIT/src/Datasets/" + archivo + ".txt";
     }
 

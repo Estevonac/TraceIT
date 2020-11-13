@@ -24,7 +24,7 @@ public class Ranking implements GestorDeArchivos {
     public void anadirHashmapARanking(HashMap<String, Integer> nuevoRanking){ rankingZonasYEnfermos = nuevoRanking; }
 
     public void llenarRankingPorArchivo() throws IOException { //Lee el archivo y lo llena desde el archivo
-        FileReader fileReader = new FileReader("EnfermosPorZona");
+        FileReader fileReader = new FileReader(getRuta("ZonasContagiadas"));
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String head = bufferedReader.readLine();
 

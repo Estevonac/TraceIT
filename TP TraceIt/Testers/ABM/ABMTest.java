@@ -39,7 +39,7 @@ public class ABMTest implements GestorDeArchivos {
     public void cargarAdministradorDebeAgregarloALaLista() throws InvalidDataException, IOException {
         ABM abm = new ABM();  //La lista debe empezar vacia y despues de cargar los datos debe estar llena
         abm.getListaAdministradores();
-        abm.cargarAdministradores();
+        //abm.cargarAdministradores();
         abm.getListaAdministradores();
         leerArchivo("Administradores");
         Assert.assertEquals(abm.getListaAdministradores().size(),0);

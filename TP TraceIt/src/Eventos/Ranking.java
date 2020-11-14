@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-
 import static java.lang.Integer.parseInt;
 
 public class Ranking implements GestorDeArchivos {
@@ -64,12 +63,26 @@ public class Ranking implements GestorDeArchivos {
 
     public HashMap<String, Integer> mostrarRankingMenorEnfermos() throws IOException {
         sortMenorEnfermos();
-        return getRankingZonasYEnfermos();
+        HashMap<String, Integer> top3 = new HashMap<>();
+
+        for (String zonaID : rankingZonasYEnfermos.keySet()){
+            if (top3.size()<3){
+                top3.put(zonaID,rankingZonasYEnfermos.get(zonaID));
+            }
+        }
+        return top3;
     }
     //Mostrar solo el top 3
     public HashMap<String, Integer> mostrarRankingMayorEnfermos() throws IOException { // muestra la zona con mayor cantidad de contagios
-        this.sortMayorEnfermos();
-        return getRankingZonasYEnfermos();
+        sortMayorEnfermos();
+        HashMap<String, Integer> top3 = new HashMap<>();
+
+        for (String zonaID : rankingZonasYEnfermos.keySet()){
+            if (top3.size()<3){
+                top3.put(zonaID,rankingZonasYEnfermos.get(zonaID));
+            }
+        }
+        return top3;
 
     }
     public HashMap<String, Integer> getRankingZonasYEnfermos() { return rankingZonasYEnfermos; }

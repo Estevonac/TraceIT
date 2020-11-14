@@ -268,7 +268,8 @@ public class TraceIT{ //Test del programa
                     "TraceIT Ciudadanos" + "\n" +
                     "Cuil: " + ciudadanoVigente.getCuil() + "\n" +
                     "Sintomas: " + ciudadanoVigente.mostrarSintomas() + "\n" +
-                    "Enfermedad: " + ciudadanoVigente.getNombreEnfermedadActual() + "\n");
+                    "Enfermedad: " + ciudadanoVigente.getNombreEnfermedadActual() + "\n" + "\n" +
+                    "Notificaciones: " + ciudadanoVigente.getNotificacion() + "\n");
 
             System.out.println("Que desea hacer?" + "\n" +
                     "1. Presentar Sintomas" + "\n" +

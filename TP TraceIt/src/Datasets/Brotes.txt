@@ -1,7 +1,1 @@
-Zona,Cantidad Contagios
-Pilar,1100
-CABA,67789
-Del Viso,441
-San Fernando,5161
-Pilar,5
-
+Enfermedad,Zona,CantidadEnfermosCovid,Pilar,5

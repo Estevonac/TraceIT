@@ -7,7 +7,6 @@ import Eventos.SolicitudEncuentro;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,6 +23,8 @@ public class Ciudadano implements RastreadorEnfermos {
     public SolicitudEncuentro solicitudEnviada;
     private Encuentro encuentroActual;
     private Enfermedad enfermedadActual;
+    public Encuentro ultimoEncuentro;
+    public String notificacion;
 
 
     public Ciudadano(String cuil, String numeroTelefono,String zona) throws InvalidDataException {
@@ -36,6 +37,7 @@ public class Ciudadano implements RastreadorEnfermos {
         solicitudesRecibidas = new ArrayList<>();
         this.zona = zona;
         solicitudEnviada = null;
+        notificacion = "";
     }
 
 
@@ -122,7 +124,13 @@ public class Ciudadano implements RastreadorEnfermos {
         }
         sintomas.add(nuevoSintoma);
         evaluarSintomas();
+        if (estaEnfermo && ultimoEncuentro.getFechaHasta().tiempoEntreFechasEnHoras(fechaSintoma) <= 48){
+            for (Ciudadano ciudadano : ultimoEncuentro.getInvitados()){
+                avisoACiudadano(this,ciudadano);
+            }
+        }
     }
+
 
     public void eliminarSintoma(String unSintoma, Fecha fechaFin) throws IOException { // Elimina sintomas a un ciudadano
         sintomas.remove(unSintoma);
@@ -134,9 +142,7 @@ public class Ciudadano implements RastreadorEnfermos {
         return sintomas;
     }
 
-    public ArrayList<SolicitudEncuentro> mostrarSolicitudesRecibidas(){
-        return solicitudesRecibidas;
-    }
+    public ArrayList<SolicitudEncuentro> mostrarSolicitudesRecibidas(){ return solicitudesRecibidas; }
 
     public ArrayList<SolicitudEncuentro> mostrarEventosProximos(){return proximosEncuentros;}
 
@@ -181,6 +187,8 @@ public class Ciudadano implements RastreadorEnfermos {
     public String getZona() { return zona; }
 
     public SolicitudEncuentro getSolicitudEnviada() { return solicitudEnviada; }
+
+    public String getNotificacion() { return notificacion; }
 }
 
 

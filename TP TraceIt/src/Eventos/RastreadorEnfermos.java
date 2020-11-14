@@ -1,5 +1,7 @@
 package Eventos;
 
+import ABM.Ciudadano;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,4 +25,9 @@ public interface RastreadorEnfermos {
 
         return enfermedadesVigentes;
     }
+
+     default void avisoACiudadano(Ciudadano emisor, Ciudadano receptor){
+        receptor.notificacion = "Tuviste un contacto reciente con: " + emisor.getCuil() + " y ahora esta enfermo.";
+
+     }
 }

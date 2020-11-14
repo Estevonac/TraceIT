@@ -16,7 +16,7 @@ public class Brote implements GestorDeArchivos {
         this.zona = zona;
         this.contagiados = contagiados;
         this.cantidadEnfermos = cantidadEnfermos;
-        escribirArchivo("Brotes", zona + "," + cantidadEnfermos); // Creo un brote y lo escribo
+        escribirArchivo("Brotes", enfermedad + "," + zona + "," + cantidadEnfermos); // Creo un brote y lo escribo
 
     }
 

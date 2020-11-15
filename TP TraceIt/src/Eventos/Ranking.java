@@ -18,7 +18,14 @@ public class Ranking implements GestorDeArchivos {
     }
 
 
-    public void anadirARanking(String zona, Integer cantidad){ rankingZonasYEnfermos.put(zona,cantidad);}
+    public void anadirARanking(String zona, Integer cantidad) {
+        if (rankingZonasYEnfermos.containsKey(zona)) {
+            rankingZonasYEnfermos.put(zona,rankingZonasYEnfermos.get(zona) +1);
+        }
+        else{
+            rankingZonasYEnfermos.put(zona, cantidad);
+        }
+    }
 
     public void anadirHashmapARanking(HashMap<String, Integer> nuevoRanking){ rankingZonasYEnfermos = nuevoRanking; }
 

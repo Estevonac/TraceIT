@@ -268,9 +268,16 @@ public class TraceIT{
         adminVigente.desbloquarCiudadano(unCiudadano);
     }
 
-    private static void verRanking() throws IOException {
-        Ranking unRanking = new Ranking();
-        unRanking.mostrarRankingMayorEnfermos();
+    private static void verRanking() throws IOException, InvalidDataException, InexistentUserException, IllegalConditionsException {
+        if (ciudadanoVigente != null){
+            System.out.println(ranking.mostrarRankingMayorEnfermos());
+            pantallaCiudadano();
+        }
+        else{
+            System.out.println(ranking.mostrarRankingMayorEnfermos());
+            pantallaAdmin();
+        }
+
 
     }
 
@@ -363,6 +370,9 @@ public class TraceIT{
         String fecha = input.nextLine();
 
         ciudadanoVigente.presenciaSintomas(sintoma, toFecha(fecha));
+        if (ciudadanoVigente.estaEnfermo){
+            ranking.anadirARanking(ciudadanoVigente.getZona(),1);
+        }
     }
 
 
@@ -433,10 +443,13 @@ public class TraceIT{
     }
     private static void mostrarSolicitudes() throws InexistentUserException, InvalidDataException, IOException, IllegalConditionsException {
         Scanner input = new Scanner(System.in);
-        System.out.println("Solicitudes recibidas: ");
-        ciudadanoVigente.mostrarSolicitudesRecibidas();
+        ArrayList<String> cuilsEmisores = new ArrayList<>();
+        for (SolicitudEncuentro unaSolicitud : ciudadanoVigente.mostrarSolicitudesRecibidas()){
+            cuilsEmisores.add(unaSolicitud.getEmisor().getCuil());
+        }
+        System.out.println("Cuils de los emisores de las solicitudes recibidas: " + cuilsEmisores.toString() + "\n") ;
 
-        System.out.print("Desea aceptar / rechazar alguna? Si o No");
+        System.out.print("Desea aceptar / rechazar alguna? Si o No: ");
         String respuesta = input.nextLine();
 
         if (respuesta.equalsIgnoreCase("si")){

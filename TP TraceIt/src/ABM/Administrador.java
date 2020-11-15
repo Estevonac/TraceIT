@@ -19,11 +19,17 @@ public class Administrador implements GestorDeArchivos {
 
     }
 
-    public Enfermedad crearEnfermedad(String nombre) throws IOException {
-         return new Enfermedad(nombre);
+    public void crearEnfermedad(String nombre) throws IOException {
+        Enfermedad unaEnfermedad = new Enfermedad(nombre);
+        String datos = unaEnfermedad.getNombre();
+        escribirArchivo("Enfermedades",datos);
+
     }
-    public Enfermedad crearEnfermedad(String nombre, ArrayList<String> sintomas) throws IOException {
-        return new Enfermedad(nombre, sintomas);
+    public void crearEnfermedad(String nombre, ArrayList<String> sintomas) throws IOException {
+        Enfermedad unaEnfermedad = new Enfermedad(nombre,sintomas);
+        String datos = unaEnfermedad.getNombre() + ", " + unaEnfermedad.sintomasEnfermedad.toString();
+        escribirArchivo("Enfermedades",datos);
+
     }
 
 

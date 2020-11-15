@@ -4,9 +4,7 @@ import ABM.Ciudadano;
 import Persistencia.Fecha;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-//import static Evento.Enfermedad.getEnfermedadesVigentes;
 
 public class Encuentro implements RastreadorEnfermos{
 
@@ -17,7 +15,6 @@ public class Encuentro implements RastreadorEnfermos{
 
 
     public Encuentro(ArrayList<Ciudadano> invitados, Fecha fechaDesde, Fecha fechaHasta, String zona){
-// Una vez aceptado el encuentro aca se evalua el contacto (Extraer metodo de tuvoContacto)
         this.invitados = invitados;
         this.zona = zona;
         this.fechaDesde = fechaDesde;
@@ -47,35 +44,14 @@ public class Encuentro implements RastreadorEnfermos{
             if (unCiudadano.estaEnfermo()){
                 enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(),enfermedadesYEnfermos.get(unCiudadano.getEnfermedadActual()) +1);
             }
-
         }
         ordenarEnfermedadesYEnfermos(); //Testear metodo
-         enfermedadesYEnfermos.entrySet().stream().filter( e -> e.getValue() >= 5).collect(Collectors.toList()); // Probar este tambien. Recolectar la enfermedad y la cant de enfermos para el brote
-        enfermedadesYEnfermos.entrySet().forEach((entry) ->
-        {if(entry.getValue()>=5){
-            try {
-                new Brote(getZona(),getInvitados(),getCantEnfermosEnEncuentro(entry.getKey()),entry.getKey().getNombre());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
-        });
-        //if (cantEnfermosEnAlgunaEnfermedad >= 5){ Falta el ultimo paso. Chequear con todas las enfermedades y si hay mas de 5 enfermos crear el brote
-        //  new Brote(getZona(),enfermos,enfermos.size(),getEnfermedad());
+        enfermedadesYEnfermos.clear();
+        enfermedadesYEnfermos = getEnfermedadesParaBrotes();
+        crearBrotesEnEncuentro(enfermedadesYEnfermos);
     }
 
 
-    public int getCantEnfermosEnEncuentro(Enfermedad unaEnfermedad) throws IOException {
-        int cantEnfermos = 0;
-        for (Ciudadano unCiudadano : invitados){
-            unCiudadano.evaluarSintomas();
-            if (unCiudadano.estaEnfermo()){
-                cantEnfermos++;
-            }
-        }
-
-        return cantEnfermos;
-    }
     public ArrayList<Ciudadano> getEnfermosEnEncuentro(Enfermedad unaEnfermedad) throws IOException {
         ArrayList<Ciudadano> enfermos = new ArrayList<>();
         for (Ciudadano unCiudadano : invitados){
@@ -85,6 +61,19 @@ public class Encuentro implements RastreadorEnfermos{
             }
         }
         return enfermos;
+    }
+
+    public HashMap<Enfermedad, Integer> getEnfermedadesParaBrotes(){
+        HashMap<Enfermedad, Integer> hashMapParaBrotes = new HashMap<>();
+
+        for ( Map.Entry<Enfermedad, Integer> entry : enfermedadesYEnfermos.entrySet()) {
+            Enfermedad enfermedad = entry.getKey();
+            Integer cantidad = entry.getValue();
+           if (cantidad>=5){
+               hashMapParaBrotes.put(enfermedad, cantidad);
+           }
+        }
+        return hashMapParaBrotes;
     }
 
     public String getZona() { return zona; }
@@ -112,6 +101,14 @@ public class Encuentro implements RastreadorEnfermos{
                         .compareTo(((Map.Entry<String, Integer>) o1).getValue());
             }
         });
+    }
+    private void crearBrotesEnEncuentro(HashMap<Enfermedad, Integer> enfermedadesYEnfermos) throws IOException {
+        for (Map.Entry<Enfermedad, Integer> entry : enfermedadesYEnfermos.entrySet()) {
+            Enfermedad enfermedad = entry.getKey();
+            Integer cantidad = entry.getValue();
+
+            new Brote(getZona(),getEnfermosEnEncuentro(enfermedad),cantidad,enfermedad.getNombre());
+        }
     }
 
 }

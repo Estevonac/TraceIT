@@ -12,14 +12,19 @@ public interface RastreadorEnfermos {
 
     default ArrayList<Enfermedad> getEnfermedadesVigentes() throws IOException {
         ArrayList<Enfermedad> enfermedadesVigentes = new ArrayList<>();
-        FileReader fileReader = new FileReader("Enfermedades");
+        FileReader fileReader = new FileReader("TP TraceIT/src/Datasets/Enfermedades.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String head = bufferedReader.readLine();
 
         String line;
         while((line = bufferedReader.readLine()) != null) { //Verificar y testear
             String[] dato = line.split(",");
-            enfermedadesVigentes.add(new Enfermedad(dato[0]));
+            ArrayList<String> sintomasDeEnfermedad = new ArrayList<>();
+            for (int i = 1; i < dato.length; i++) {
+                sintomasDeEnfermedad.add(dato[i]);
+            }
+            enfermedadesVigentes.add(new Enfermedad(dato[0], sintomasDeEnfermedad));
+            sintomasDeEnfermedad.clear(); //Reseteamos la lista de sintomas
         }
         bufferedReader.close();
 

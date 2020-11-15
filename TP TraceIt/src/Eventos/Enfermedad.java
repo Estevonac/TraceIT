@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class Enfermedad implements GestorDeArchivos{
 
-    /*
-    Probar de implementar distintos tipos de sintomas. Sintomas contagiables y no contagiables.
-     */
+
+    //Probar de implementar distintos tipos de sintomas. Sintomas contagiables y no contagiables.
+
     private final String nombre;
     public ArrayList<String> sintomasEnfermedad;
     public ArrayList<Enfermedad> enfermedadesVigentes = new ArrayList<>();
@@ -20,7 +20,7 @@ public class Enfermedad implements GestorDeArchivos{
         sintomasEnfermedad = new ArrayList<>();
         enfermedadesVigentes.add(this);
         HashMap<String, ArrayList<String>> enfermedadesVigentes = new HashMap<>(); // Usado para la persistencia
-        escribirArchivo("Enfermedades",nombre); // La escribo en el archivo de forma. Enfermedad, Sintomas relacionados
+
 
     }
 
@@ -29,15 +29,23 @@ public class Enfermedad implements GestorDeArchivos{
         sintomasEnfermedad = sintomas;
         enfermedadesVigentes.add(this);
         HashMap<String, ArrayList<String>> enfermedadesVigentes = new HashMap<>(); // Usado para la persistencia
-        escribirArchivo("Enfermedades",nombre + "," + sintomasEnfermedad); // La escribo en el archivo de forma. Enfermedad, Sintomas relacionados
-
     }
 
-    public void addSintomas(String sintoma) throws IOException {
-        sintomasEnfermedad.add(sintoma);// fiebre, tos, dolor muscular, falta de aire, fatiga, perdida de olfato, congestion. Si por lo menos hay 2 se considerara enfermo.
+    public void addSintomas(String sintoma) throws IOException { //Borra los sintomas y solo anade uno
+        sintomasEnfermedad.add(sintoma);// fiebre, tos, dolor muscular, falta de aire, fatiga, perdida de olfato, congestion.
         editarArchivo("Enfermedades",getNombre(),getNombre() + "," + sintoma);
     }
-
+    @Override
+    public String toString(){
+        StringBuilder sintomasEnString = new StringBuilder();
+        for (int i = 0; i < sintomasEnfermedad.size(); i++) {
+            sintomasEnString.append(sintomasEnfermedad.get(i)).append(",");
+            if (i == (sintomasEnfermedad.size()-1)){
+                sintomasEnString.deleteCharAt(sintomasEnString.length());
+            }
+        }
+        return sintomasEnString.toString();
+    }
 
 
     public String getNombre() {

@@ -26,7 +26,6 @@ public interface GestorDeArchivos { // Interfaz que se va a encargar de la persi
 
         bufferedWriter.write(aEscribir); // Escribimos y hacemos un salto de linea
         bufferedWriter.newLine();
-        bufferedWriter.flush();
         bufferedWriter.close();
         }
 

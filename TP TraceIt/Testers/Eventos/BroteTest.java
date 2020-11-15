@@ -1,11 +1,9 @@
-package Testers.Eventos;
+package Eventos;
 
 import ABM.Ciudadano;
-import Eventos.Brote;
 import Exceptions.InvalidDataException;
 import Persistencia.GestorDeArchivos;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.util.ArrayList;
 

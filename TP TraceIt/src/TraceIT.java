@@ -1,40 +1,56 @@
 import ABM.ABM;
 import ABM.Administrador;
 import ABM.Ciudadano;
-import Eventos.Ranking;
+import Eventos.*;
 import Exceptions.IllegalConditionsException;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class TraceIT{ //Test del programa
+public class TraceIT{
     static ABM abm = new ABM();
     static Administrador adminVigente;
     static Ciudadano ciudadanoVigente;
+    static Ranking ranking;
+    static ArrayList<String> listaBrotes = new ArrayList<>();
+    static {
+        try {
+            ranking = new Ranking();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) throws InvalidDataException, IOException, IllegalConditionsException, InexistentUserException {
         cargarArchivos();
         traceITinterfaz();
-        guardarArchivos();
-
     }
 
 
-    private static void cargarArchivos() throws IOException { //Lee los datasets y los carga en el programa
-       //ABM.cargarAdministradores();
-       //ABM.ABM.cargarCiudadanos();
-        //Eventos.enfermedad.cargarEnfermedades();
-        //Eventos.Brotes.cargarBrotes();
+    private static void cargarArchivos() throws IOException, InvalidDataException { //Lee los datasets y los carga en el programa
+       abm.cargarAdministradores();
+       abm.cargarCiudadanos();
+       abm.cargarEnfermedades();
+       //cargarBrotes();
     }
-    private static void guardarArchivos() throws IOException {
 
-    //Ranking.persistirRanking();
+    private static void cargarBrotes() throws IOException {
+        FileReader fileReader = new FileReader("TP TraceIT/src/Datasets/Brotes.txt");
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String head = bufferedReader.readLine();
 
+        String line;
+        while((line = bufferedReader.readLine()) != null) {
+            String[] broteDatos = line.split(",");
+            listaBrotes.add(broteDatos[0] + ", " + broteDatos[1] + ", " + broteDatos[2]);
+        }
+        bufferedReader.close();
     }
 
     private static void traceITinterfaz() throws IOException, InvalidDataException, IllegalConditionsException, InexistentUserException {
@@ -215,8 +231,11 @@ public class TraceIT{ //Test del programa
         System.out.print("Ingrese la cantidad de sintomas relacionados: ");
         int cantidadSintomas = input.nextInt();
         ArrayList<String> sintomas = new ArrayList<>();
-        for (int i = 0; i < cantidadSintomas; i++) {
-            sintomas.add(input.nextLine());
+
+        for (int i = 1; i <= cantidadSintomas; i++) { //Porque no funciona????
+            System.out.print("Ingrese el sintoma " + i + ": ");
+            String sintoma = input.nextLine();
+            sintomas.add(sintoma);
         }
         adminVigente.crearEnfermedad(enfermedad,sintomas);
     }
@@ -277,7 +296,8 @@ public class TraceIT{ //Test del programa
                     "3. Mostrar sintomas" + "\n" +
                     "4. Solicitar encuentro" + "\n" +
                     "5. Mostrar solicitudes" + "\n" +
-                    "6. Cerrar sesion" + "\n");
+                    "6. Empezar encuentro" + "\n" +
+                    "7. Cerrar sesion" + "\n");
 
             switch (input.nextInt()) {
                 case 1 -> {
@@ -303,12 +323,21 @@ public class TraceIT{ //Test del programa
                 }
                 case 6 -> {
                     clearScreen();
+                    ciudadanoVigente.empezarEncuentro();
+                    return;
+                }
+                case 7 -> {
+                    clearScreen();
+                    mostrarBrotes();
+                    return;
+                }
+                case 8 -> {
+                    clearScreen();
                     traceITinterfaz();
                     return;
                 }
                 default -> System.out.println("Opcion invalida");
             }
-
         }
     }
 
@@ -323,6 +352,7 @@ public class TraceIT{ //Test del programa
 
         ciudadanoVigente.presenciaSintomas(sintoma, toFecha(fecha));
     }
+
 
     private static Fecha toFecha(String fecha){
         int dia = Integer.parseInt(fecha.substring(0,2));
@@ -405,6 +435,14 @@ public class TraceIT{ //Test del programa
         else{
             System.out.println("La respuesta puede ser si o no. Proba nuevamente");
             mostrarSolicitudes();
+        }
+    }
+
+    static void mostrarBrotes(){
+        System.out.println("Brotes: ");
+        System.out.println("Enfermedad,  Zona,  Cantidad de enfermos");
+        for (String listaBrote : listaBrotes) {
+            System.out.println(listaBrote);
         }
     }
 }

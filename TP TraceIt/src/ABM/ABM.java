@@ -1,42 +1,51 @@
 package ABM;
 
+import Eventos.Enfermedad;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.GestorDeArchivos;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ABM implements GestorDeArchivos {
     ArrayList<Administrador> listaAdministradores;
     ArrayList<Ciudadano> listaCiudadanos;
+    ArrayList<Enfermedad> listaEnfermedades;
 
     public ABM(){
         this.listaAdministradores = new ArrayList<>(); // Obtenerla listas de los archivos de persistencia.
         this.listaCiudadanos = new ArrayList<>();
+        this.listaEnfermedades = new ArrayList<>();
 
     }
 
-    public void addAdministrador(Administrador administrador) throws InvalidDataException, IOException {
-        if(listaAdministradores.contains(administrador.getNombreUsuario())){
-            throw new InvalidDataException("Administrador ya existente");
+    public void addAdministrador(Administrador unAdministrador) throws InvalidDataException, IOException {
+        for (Administrador administrador : listaAdministradores) {
+            if (!administrador.getNombreUsuario().equals(unAdministrador.getNombreUsuario())) {
+                String adminDatos = unAdministrador.getNombreUsuario() + "," + unAdministrador.getContrasena();
+                escribirArchivo("Administradores", adminDatos);
+                listaAdministradores.add(unAdministrador);
+                return;
+            }
         }
-        else {
-            String adminDatos = administrador.getNombreUsuario() + "," + administrador.getContrasena();
-            escribirArchivo("Administradores",adminDatos);
-            listaAdministradores.add(administrador);
-        }
+        throw new InvalidDataException("Administradores ya existente");
     }
+
     public void agregarCiudadano(Ciudadano unCiudadano) throws InvalidDataException, IOException {
-        if(listaCiudadanos.contains(unCiudadano.getNumeroTelefono())){
-            throw new InvalidDataException("Ciudadano ya existente");
+        for (Ciudadano ciudadano : listaCiudadanos) {
+            if (!ciudadano.getNumeroTelefono().equals(unCiudadano.getNumeroTelefono())) {
+                String ciudadanoDatos = unCiudadano.getCuil() + "," + unCiudadano.getNumeroTelefono() + "," + unCiudadano.getZona();
+                escribirArchivo("AnsesCiudadanos", ciudadanoDatos);
+                listaCiudadanos.add(unCiudadano);
+                return;
+            }
         }
-        else {
-            String ciudadanoDatos = unCiudadano.getCuil() + "," + unCiudadano.getNumeroTelefono() + "," + unCiudadano.getZona();
-            escribirArchivo("AnsesCiudadanos",ciudadanoDatos);
-            listaCiudadanos.add(unCiudadano);
-        }
+        throw new InvalidDataException("Ciudadano ya existente");
+
     }
 
     public void cambiarNombre(Administrador unAdmin, String nuevoNombre) throws InvalidDataException, IOException {
@@ -84,19 +93,6 @@ public class ABM implements GestorDeArchivos {
         }
         return listaToString;
     }
-    /*public static void cargarAdministradores() throws IOException { //Lee los datasets y los carga en el programa
-
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(getRuta("Administradores")));
-        String head = bufferedReader.readLine();
-
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            String[] dato = line.split(",");
-            new Administrador(dato[0],dato[1]);
-        }
-        bufferedReader.close();
-
-    }*/
 
     public ArrayList<String> getListaCiudadanos(){
 
@@ -137,5 +133,43 @@ public class ABM implements GestorDeArchivos {
             if (admin.getNombreUsuario().equals(nombre)){ return admin;}
         }
         throw new InexistentUserException("El admin no existe");
+    }
+
+    public void cargarAdministradores() throws IOException { //LeerArchivos
+        FileReader fileReader = new FileReader(getRuta("Administradores"));
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String head = bufferedReader.readLine();
+
+        String line;
+        while((line = bufferedReader.readLine()) != null) {
+            String[] dato = line.split(",");
+            listaAdministradores.add(new Administrador(dato[0],dato[1]));
+        }
+        bufferedReader.close();
+    }
+    public void cargarCiudadanos() throws IOException, InvalidDataException { //LeerArchivos
+        FileReader fileReader = new FileReader(getRuta("AnsesCiudadanos"));
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String head = bufferedReader.readLine();
+
+        String line;
+        while((line = bufferedReader.readLine()) != null) {
+            String[] dato = line.split(",");
+            listaCiudadanos.add(new Ciudadano(dato[0],dato[1],dato[2]));
+        }
+        bufferedReader.close();
+    }
+    public void cargarEnfermedades() throws IOException {
+        FileReader fileReader = new FileReader(getRuta("Enfermedades"));
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String head = bufferedReader.readLine();
+
+        String line;
+        while((line = bufferedReader.readLine()) != null) {
+            String[] dato = line.split(",");
+            ArrayList<String> sintomas = new ArrayList<>(Arrays.asList(dato).subList(1, dato.length));
+           listaEnfermedades.add(new Enfermedad(dato[0],sintomas));
+        }
+        bufferedReader.close();
     }
 }

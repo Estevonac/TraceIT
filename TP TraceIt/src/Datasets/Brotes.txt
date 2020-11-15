@@ -1,1 +1,3 @@
-Enfermedad,Zona,CantidadEnfermosCovid,Pilar,5
+Enfermedad,Zona,CantidadEnfermos
+Covid,Pilar,5
+

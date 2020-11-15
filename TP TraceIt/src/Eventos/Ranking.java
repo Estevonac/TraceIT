@@ -22,6 +22,8 @@ public class Ranking implements GestorDeArchivos {
 
     public void anadirHashmapARanking(HashMap<String, Integer> nuevoRanking){ rankingZonasYEnfermos = nuevoRanking; }
 
+    public void removerHashmapARanking(){rankingZonasYEnfermos.clear();}
+
     public void llenarRankingPorArchivo() throws IOException { //Lee el archivo y lo llena desde el archivo
         FileReader fileReader = new FileReader(getRuta("ZonasContagiadas"));
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -35,9 +37,6 @@ public class Ranking implements GestorDeArchivos {
         bufferedReader.close();
     }
 
-    public  void persistirRanking() throws IOException { //Despues de crearlo hay que llenarlo con los datasets
-        escribirArchivo("ZonasContagiadas",getRankingZonasYEnfermos().toString());
-    }
     public void sortMayorEnfermos() throws IOException { // Implementar sorts
 
         Object[] array = rankingZonasYEnfermos.entrySet().toArray();
@@ -62,7 +61,7 @@ public class Ranking implements GestorDeArchivos {
     }
 
     public HashMap<String, Integer> mostrarRankingMenorEnfermos() throws IOException {
-        sortMenorEnfermos();
+
         HashMap<String, Integer> top3 = new HashMap<>();
 
         for (String zonaID : rankingZonasYEnfermos.keySet()){
@@ -70,11 +69,13 @@ public class Ranking implements GestorDeArchivos {
                 top3.put(zonaID,rankingZonasYEnfermos.get(zonaID));
             }
         }
+        removerHashmapARanking();
+        anadirHashmapARanking(top3);
+        sortMenorEnfermos();
         return top3;
     }
     //Mostrar solo el top 3
     public HashMap<String, Integer> mostrarRankingMayorEnfermos() throws IOException { // muestra la zona con mayor cantidad de contagios
-        sortMayorEnfermos();
         HashMap<String, Integer> top3 = new HashMap<>();
 
         for (String zonaID : rankingZonasYEnfermos.keySet()){
@@ -82,6 +83,9 @@ public class Ranking implements GestorDeArchivos {
                 top3.put(zonaID,rankingZonasYEnfermos.get(zonaID));
             }
         }
+        removerHashmapARanking();
+        anadirHashmapARanking(top3);
+        sortMayorEnfermos();
         return top3;
 
     }

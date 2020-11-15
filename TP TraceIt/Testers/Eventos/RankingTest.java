@@ -42,20 +42,21 @@ public class RankingTest {
       hashmapSorteado.put("Pilar",100);
       hashmapSorteado.put("Escobar", 50);
       hashmapSorteado.put("Nordelta",10);
-      hashmapSorteado.put("Del Viso",5);
 
       unRanking.anadirHashmapARanking(hashmapSorteado);
+      System.out.println(unRanking.getRankingZonasYEnfermos());
 
-      HashMap<String, Integer> hashmapASortear = new HashMap<>();
-      hashmapASortear.put("Escobar", 50);
-      hashmapASortear.put("Del Viso",5);
-      hashmapASortear.put("Nordelta",10);
-      hashmapASortear.put("Pilar",100);
+     // HashMap<String, Integer> hashmapASortear = new HashMap<>();
+     // hashmapASortear.put("Escobar", 50);
+      //hashmapASortear.put("Del Viso",5);
+     // hashmapASortear.put("Nordelta",10);
+     // hashmapASortear.put("Pilar",100);
+     // System.out.println(hashmapASortear);
 
-      otroRanking.anadirHashmapARanking(hashmapASortear);
-      otroRanking.sortMayorEnfermos();
+      //otroRanking.anadirHashmapARanking(hashmapASortear);
+      //otroRanking.sortMayorEnfermos();
 
-      assertEquals(unRanking.mostrarRankingMayorEnfermos(),otroRanking.mostrarRankingMayorEnfermos()); //Test Pasa
+      //assertEquals(unRanking.mostrarRankingMayorEnfermos(),otroRanking.mostrarRankingMayorEnfermos()); //Test Pasa
      }
 
 }

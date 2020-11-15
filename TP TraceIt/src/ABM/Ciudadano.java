@@ -67,17 +67,17 @@ public class Ciudadano implements RastreadorEnfermos {
     //Solicitar Contacto crea las invitaciones
     public void solicitarContacto(ArrayList<Ciudadano> participantes, Fecha fechaDesde, Fecha fechaHasta,String zona) throws InexistentUserException {
 
-        SolicitudEncuentro unEncuentro = new SolicitudEncuentro(this,participantes,fechaDesde,fechaHasta,zona); // Reestructurar y extraer metodo en clase SolicitudEncuentro
-        unEncuentro.enviarSolicitudes();
+       solicitudEnviada = new SolicitudEncuentro(this,participantes,fechaDesde,fechaHasta,zona);
+        solicitudEnviada.enviarSolicitudes();
     }
 
     /*Empezar Encuentro crea el encuentro tomando los participantes que han confirmado la asistencia
       Va a ser usado para mostrar la aplicacion ya que no vamos a esperar hasta que ocurra un evento.
       Este se comunica con la clase encuentro para simularlo.
      */
-    public void empezarEncuentro(SolicitudEncuentro unaSolicitud) throws IOException {
-        unaSolicitud.confirmarCiudadanos();
-        encuentroActual = new Encuentro(unaSolicitud.getParticipantesConfirmados(), unaSolicitud.getFechaDesde(), unaSolicitud.getFechaHasta(), unaSolicitud.getZona());
+    public void empezarEncuentro() throws IOException {
+        solicitudEnviada.confirmarCiudadanos();
+        encuentroActual = new Encuentro( solicitudEnviada.getParticipantesConfirmados(),  solicitudEnviada.getFechaDesde(),  solicitudEnviada.getFechaHasta(), solicitudEnviada.getZona());
         encuentroActual.evaluarEncuentro();
     }
 

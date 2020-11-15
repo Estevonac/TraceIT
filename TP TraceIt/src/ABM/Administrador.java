@@ -1,13 +1,14 @@
 package ABM;
 
 import Eventos.Enfermedad;
+import Eventos.RastreadorEnfermos;
 import Exceptions.IllegalConditionsException;
 import Persistencia.GestorDeArchivos;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Administrador implements GestorDeArchivos {
+public class Administrador implements GestorDeArchivos, RastreadorEnfermos {
 
     protected   String nombreUsuario;
     protected   String contrasena;
@@ -22,11 +23,14 @@ public class Administrador implements GestorDeArchivos {
     public void crearEnfermedad(String nombre) throws IOException {
         Enfermedad unaEnfermedad = new Enfermedad(nombre);
         String datos = unaEnfermedad.getNombre();
+        //agregarEnfermedadAVigentes(unaEnfermedad);
         escribirArchivo("Enfermedades",datos);
+
 
     }
     public void crearEnfermedad(String nombre, ArrayList<String> sintomas) throws IOException {
         Enfermedad unaEnfermedad = new Enfermedad(nombre,sintomas);
+        //agregarEnfermedadAVigentes(unaEnfermedad);
         String datos = unaEnfermedad.getNombre() + ", " + unaEnfermedad.sintomasEnfermedad.toString();
         escribirArchivo("Enfermedades",datos);
 
@@ -46,7 +50,17 @@ public class Administrador implements GestorDeArchivos {
             unCiudadano.habilitado = false;
 
         }
-        else {throw new IllegalConditionsException("El ciudadano ya esta desbloqueado");}
+        else {throw new IllegalConditionsException("El ciudadano ya esta bloqueado");}
+    }
+    public ArrayList<String> mostrarEnfermedadesVigentes() throws IOException {
+        ArrayList<String> enfermedades = new ArrayList<>();
+        for (Enfermedad enfermedad : getEnfermedadesVigentes()){
+            enfermedades.add(enfermedad.getNombre());
+        }
+        return enfermedades;
+    }
+    public void agregarEnfermedadAVigentes(Enfermedad unaEnfermedad){
+        Enfermedad.enfermedadesVigentes.add(unaEnfermedad);
     }
 
     public String getNombreUsuario() {

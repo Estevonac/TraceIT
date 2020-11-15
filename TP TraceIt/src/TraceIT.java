@@ -80,6 +80,8 @@ public class TraceIT{
                 }
                 case 4 -> {
                     clearScreen();
+                    System.out.println("Gracias por usar TraceIT");
+                    System.exit(0);
                     return;
                 }
                 default -> System.out.println("Opcion invalida");
@@ -157,7 +159,8 @@ public class TraceIT{
                     "5. Bloquear ciudadano" + "\n" +
                     "6. Desbloquear ciudadano" + "\n" +
                     "7. Ver ranking" + "\n" +
-                    "8. Cerrar sesion" + "\n");
+                    "8. Ver enfermedades existentes" + "\n" +
+                    "9. Cerrar sesion" + "\n");
 
             switch (scanner.nextInt()) {
                 case 1 -> {
@@ -189,6 +192,10 @@ public class TraceIT{
                     verRanking();
                 }
                 case 8 -> {
+                    clearScreen();
+                    mostrarEnfermedadesVigentes();
+                }
+                case 9 -> {
                     clearScreen();
                     adminVigente = null;
                     traceITinterfaz();
@@ -224,18 +231,16 @@ public class TraceIT{
 
     private static void crearEnfermedad() throws IOException {
         Scanner input = new Scanner(System.in);
-
+        ArrayList<String> sintomas = new ArrayList<>();
         System.out.print("Ingrese el nombre de la enfermedad: ");
         String enfermedad = input.nextLine();
 
         System.out.print("Ingrese la cantidad de sintomas relacionados: ");
-        int cantidadSintomas = input.nextInt();
-        ArrayList<String> sintomas = new ArrayList<>();
+        int cantidadSintomas = Integer.parseInt(input.nextLine());
 
         for (int i = 1; i <= cantidadSintomas; i++) { //Porque no funciona????
             System.out.print("Ingrese el sintoma " + i + ": ");
-            String sintoma = input.nextLine();
-            sintomas.add(sintoma);
+            sintomas.add(input.nextLine());
         }
         adminVigente.crearEnfermedad(enfermedad,sintomas);
     }
@@ -243,33 +248,24 @@ public class TraceIT{
     private static void verListaCiudadanos() {
         System.out.println(abm.getListaCiudadanos());
     }
-    private static void bloquearCiudadano() throws InvalidDataException, IllegalConditionsException { // Mejorar para que solo sea necesario el CUIL
+
+    private static void bloquearCiudadano() throws InvalidDataException, IllegalConditionsException, InexistentUserException {
         Scanner input = new Scanner(System.in);
 
         System.out.print("Ingrese el CUIL del ciudadano a bloquear: ");
         String cuil = input.nextLine();
 
-        System.out.print("Ingrese el telefono del ciudadano a bloquear: ");
-        String telefono = input.nextLine();
-
-        System.out.print("Ingrese la zona del ciudadano a bloquear: ");
-        String zona = input.nextLine();
-
-        adminVigente.bloquarCiudadano(new Ciudadano(cuil,telefono,zona));
+        Ciudadano unCiudadano = abm.getCiudadanoPorCuil(cuil);
+        adminVigente.bloquarCiudadano(unCiudadano);
     }
-    private static void desbloquearCiudadano() throws InvalidDataException, IllegalConditionsException { // Mejorar para que solo sea necesario el CUIL
+    private static void desbloquearCiudadano() throws InvalidDataException, IllegalConditionsException, InexistentUserException { // Mejorar para que solo sea necesario el CUIL
         Scanner input = new Scanner(System.in);
 
         System.out.print("Ingrese el CUIL del ciudadano a bloquear: ");
         String cuil = input.nextLine();
 
-        System.out.print("Ingrese el telefono del ciudadano a bloquear: ");
-        String telefono = input.nextLine();
-
-        System.out.print("Ingrese la zona del ciudadano a bloquear: ");
-        String zona = input.nextLine();
-
-        adminVigente.desbloquarCiudadano(new Ciudadano(cuil,telefono,zona));
+        Ciudadano unCiudadano = abm.getCiudadanoPorCuil(cuil);
+        adminVigente.desbloquarCiudadano(unCiudadano);
     }
 
     private static void verRanking() throws IOException {
@@ -288,7 +284,7 @@ public class TraceIT{
                     "Cuil: " + ciudadanoVigente.getCuil() + "\n" +
                     "Sintomas: " + ciudadanoVigente.mostrarSintomas() + "\n" +
                     "Enfermedad: " + ciudadanoVigente.getNombreEnfermedadActual() + "\n" + "\n" +
-                    "Notificaciones: " + ciudadanoVigente.getNotificacion() + "\n");
+                    "Notificaciones: " + ciudadanoVigente.getNotificacion() + notificacionEncuentro() +"\n");
 
             System.out.println("Que desea hacer?" + "\n" +
                     "1. Presentar Sintomas" + "\n" +
@@ -297,7 +293,10 @@ public class TraceIT{
                     "4. Solicitar encuentro" + "\n" +
                     "5. Mostrar solicitudes" + "\n" +
                     "6. Empezar encuentro" + "\n" +
-                    "7. Cerrar sesion" + "\n");
+                    "7. Ver brotes" + "\n" +
+                    "8. Ver enfermedades existentes" + "\n" +
+                    "9. Ver ranking" + "\n" +
+                    "10. Cerrar sesion" + "\n");
 
             switch (input.nextInt()) {
                 case 1 -> {
@@ -324,6 +323,8 @@ public class TraceIT{
                 case 6 -> {
                     clearScreen();
                     ciudadanoVigente.empezarEncuentro();
+                    System.out.println("Evento simulado con exito");
+                    pantallaCiudadano();
                     return;
                 }
                 case 7 -> {
@@ -333,6 +334,16 @@ public class TraceIT{
                 }
                 case 8 -> {
                     clearScreen();
+                    mostrarEnfermedadesVigentes();
+                    return;
+                }
+                case 9 -> {
+                    clearScreen();
+                    verRanking();
+                    return;
+                }
+                case 10 -> {
+                    clearScreen();
                     traceITinterfaz();
                     return;
                 }
@@ -340,6 +351,7 @@ public class TraceIT{
             }
         }
     }
+
 
     private static void presentarSintomas() throws IOException {
         Scanner input = new Scanner(System.in);
@@ -379,36 +391,52 @@ public class TraceIT{
         ciudadanoVigente.mostrarSintomas();
     }
 
-    private static void solicitarUnEncuentro() throws InexistentUserException {
+    private static void solicitarUnEncuentro() throws InexistentUserException, InvalidDataException, IOException, IllegalConditionsException {
         Scanner input = new Scanner(System.in);
         ArrayList<Ciudadano> participantes = new ArrayList<>();
 
-        System.out.println("Ingresa la cantidad de participantes");
-        int cantParticipantes = input.nextInt();
+        if (ciudadanoVigente.estaEnfermo){
+            System.out.println("Estas enfermo, mejor quedate en casa");
+            pantallaCiudadano();
+        }
+
+        System.out.print("Ingresa la cantidad de participantes: ");
+        int cantParticipantes = Integer.parseInt(input.nextLine());
 
         for (int i = 1; i <= cantParticipantes; i++) {
             System.out.print("Ingrese el Cuil del participante " + i + ": ");
             String cuil = input.nextLine();
             participantes.add(abm.getCiudadanoPorCuil(cuil));
         }
-        System.out.print("Ingrese la fecha de inicio, en formato d/m H:M : ");
+        System.out.print("Ingrese la fecha de inicio, en formato dd/mm HH:MM : ");
         Fecha fechaDesde = toFecha(input.nextLine());
 
-        System.out.print("Ingrese la fecha de finalizacion, en formato d/m H:M : ");
+        System.out.print("Ingrese la fecha de finalizacion, en formato dd/mm HH:MM : ");
         Fecha fechaHasta = toFecha(input.nextLine());
 
-        System.out.println("Ingrese la zona del encuentro: ");
+        System.out.print("Ingrese la zona del encuentro: ");
         String zona = input.nextLine();
 
         ciudadanoVigente.solicitarContacto(participantes,fechaDesde,fechaHasta,zona);
     }
 
+    private static String notificacionEncuentro() {
+        if (ciudadanoVigente.solicitudesRecibidas.size() == 1){
+            return ("Tenes una solicitud recibida, anda a mostrar solicitudes");
+        }
+        else if(ciudadanoVigente.solicitudesRecibidas.size() > 1){
+            return ("Tenes " + ciudadanoVigente.solicitudesRecibidas.size() + " solicitues recibidas, anda a mostrar solicitudes");
+        }
+        else{
+            return ("No recibiste ninguna solicitud de encuentro");
+        }
+    }
     private static void mostrarSolicitudes() throws InexistentUserException, InvalidDataException, IOException, IllegalConditionsException {
         Scanner input = new Scanner(System.in);
         System.out.println("Solicitudes recibidas: ");
         ciudadanoVigente.mostrarSolicitudesRecibidas();
 
-        System.out.print("Desea aceptar / rechazar alguna? ");
+        System.out.print("Desea aceptar / rechazar alguna? Si o No");
         String respuesta = input.nextLine();
 
         if (respuesta.equalsIgnoreCase("si")){
@@ -445,8 +473,17 @@ public class TraceIT{
             System.out.println(listaBrote);
         }
     }
+    private static void mostrarEnfermedadesVigentes() throws IOException {
+        ArrayList<String> enfermedades = new ArrayList<>();
+        if (ciudadanoVigente != null) {
+            for (Enfermedad enfermedad : ciudadanoVigente.getEnfermedadesVigentes()) {
+                enfermedades.add(enfermedad.getNombre());
+            }
+        } else {
+            for (Enfermedad enfermedad : adminVigente.getEnfermedadesVigentes()) {
+                enfermedades.add(enfermedad.getNombre());
+            }
+            System.out.println(enfermedades);
+        }
+    }
 }
-
-
-
-

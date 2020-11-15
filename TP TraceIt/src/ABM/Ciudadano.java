@@ -38,6 +38,7 @@ public class Ciudadano implements RastreadorEnfermos {
         this.zona = zona;
         solicitudEnviada = null;
         notificacion = "";
+        proximosEncuentros = new ArrayList<>();
     }
 
 
@@ -90,7 +91,8 @@ public class Ciudadano implements RastreadorEnfermos {
                 if (solicitud.equals(unaSolicitud)){
                     solicitud.estado = true;
                     solicitudesRecibidas.remove(solicitud); // La elimino de mi lista de solicitudes
-                    proximosEncuentros.add(solicitud);      // y la anado a los proximos encuentros
+                    proximosEncuentros.add(solicitud); // y la anado a los proximos encuentros
+                    return;
                 }
             }
         }
@@ -124,17 +126,25 @@ public class Ciudadano implements RastreadorEnfermos {
         }
         sintomas.add(nuevoSintoma);
         evaluarSintomas();
-        if (estaEnfermo && ultimoEncuentro.getFechaHasta().tiempoEntreFechasEnHoras(fechaSintoma) <= 48){
-            for (Ciudadano ciudadano : ultimoEncuentro.getInvitados()){
-                avisoACiudadano(this,ciudadano);
+        if (ultimoEncuentro != null) {
+            if (estaEnfermo && ultimoEncuentro.getFechaHasta().tiempoEntreFechasEnHoras(fechaSintoma) <= 48) {
+                for (Ciudadano ciudadano : ultimoEncuentro.getInvitados()) {
+                    avisoACiudadano(this, ciudadano);
+                }
             }
         }
     }
 
-
     public void eliminarSintoma(String unSintoma, Fecha fechaFin) throws IOException { // Elimina sintomas a un ciudadano
         sintomas.remove(unSintoma);
         evaluarSintomas();
+    }
+    public ArrayList<String> mostrarEnfermedadesVigentes() throws IOException {
+        ArrayList<String> enfermedades = new ArrayList<>();
+        for (Enfermedad enfermedad : getEnfermedadesVigentes()){
+            enfermedades.add(enfermedad.getNombre());
+        }
+        return enfermedades;
     }
     public Ciudadano getEmisorSolicitud(SolicitudEncuentro unaSolicitud){ return unaSolicitud.getEmisor();}
 

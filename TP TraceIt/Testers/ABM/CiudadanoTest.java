@@ -1,20 +1,24 @@
 package ABM;
 
+import Eventos.RastreadorEnfermos;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class CiudadanoTest {
+public class CiudadanoTest implements RastreadorEnfermos {
     Ciudadano jose = new Ciudadano("20450912", "114256231", "Pilar");
     Ciudadano juan = new Ciudadano("20450915", "114252244", "Pilar");
 
     public CiudadanoTest() throws InvalidDataException {
+
     }
 
     @Test
@@ -23,21 +27,17 @@ public class CiudadanoTest {
     }
 
     @Test
-    public void estaEnfermo() {
-
+    public void evaluarSintomas() throws IOException {
+        jose.presenciaSintomas("tos",new Fecha(15,11,12,30));
+        jose.presenciaSintomas("estornudos",new Fecha(15,11,12,30));
+        assertEquals(jose.getNombreEnfermedadActual(),"gripe");
     }
 
     @Test
-    public void evaluarSintomas() {
+    public void mostrarEnfermedadesVigentesDebeImprimirElArraylist() throws IOException {
+        System.out.println(getEnfermedadesVigentes());
     }
 
-    @Test
-    public void solicitarContacto() {
-    }
-
-    @Test
-    public void evaluarContacto() {
-    }
 
     @Test
     public void presenciaSintomasDebeAnadirlasAlArrayList() {

@@ -13,7 +13,7 @@ public class Enfermedad implements GestorDeArchivos{
 
     private final String nombre;
     public ArrayList<String> sintomasEnfermedad;
-    public ArrayList<Enfermedad> enfermedadesVigentes = new ArrayList<>();
+    public static ArrayList<Enfermedad> enfermedadesVigentes = new ArrayList<>();
 
     public Enfermedad(String nombre) throws IOException {  // Creamos una enfermedad y luego podemos anadirle los sintomas relacionados
         this.nombre = nombre;

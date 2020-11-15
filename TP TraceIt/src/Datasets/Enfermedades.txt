@@ -1,3 +1,2 @@
 Nombre,Sintomas
-Covid,[fiebre,dolor de cabeza,tos]
-
+Covid, [fiebre,dolor de cabeza,tos]

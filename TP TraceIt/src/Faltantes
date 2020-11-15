@@ -1,5 +1,3 @@
 
-Falta testear muchos metodos. Tests en brote y encuentro principalmente
-
-
-Resolver la creacion automatica de Brotes en un encuentro
+Testear los brotes
+Problema leyendo los sintomas de enfermedades ya creadas. Tomadas desde la persistencia.

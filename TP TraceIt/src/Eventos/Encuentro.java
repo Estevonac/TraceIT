@@ -37,7 +37,7 @@ public class Encuentro implements RastreadorEnfermos{
                 }
             }
             for (String sintoma : sintomasContacto) {//En un encuentro, una persona tiene un 60% de chance de contagiarse un sintoma de otro ciudadano
-                if ((Math.random() * 100) >= 40) { unCiudadano.presenciaSintomas(sintoma, getFechaHasta());}
+                if ((Math.random() * 100) >= 20) { unCiudadano.presenciaSintomas(sintoma, getFechaHasta());}
             }
             unCiudadano.evaluarSintomas();
 

@@ -484,8 +484,13 @@ public class TraceIT{
     static void mostrarBrotes(){
         System.out.println("Brotes: ");
         System.out.println("Enfermedad,  Zona,  Cantidad de enfermos");
-        for (String listaBrote : listaBrotes) {
-            System.out.println(listaBrote);
+        if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
+            for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
+                System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
+            }
+        }
+        else{
+            System.out.println("No estuviste en un encuentro ultimamente o no surgio ningun brote de el");
         }
     }
     private static void mostrarEnfermedadesVigentes() throws IOException {

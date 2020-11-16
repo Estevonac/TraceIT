@@ -79,6 +79,7 @@ public class Ciudadano implements RastreadorEnfermos {
     public void empezarEncuentro() throws IOException {
         solicitudEnviada.confirmarCiudadanos();
         encuentroActual = new Encuentro( solicitudEnviada.getParticipantesConfirmados(),  solicitudEnviada.getFechaDesde(),  solicitudEnviada.getFechaHasta(), solicitudEnviada.getZona());
+        ultimoEncuentro = encuentroActual;
         encuentroActual.evaluarEncuentro();
     }
 

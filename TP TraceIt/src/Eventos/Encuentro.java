@@ -12,6 +12,7 @@ public class Encuentro implements RastreadorEnfermos{
     private final Fecha fechaDesde, fechaHasta;
     private final String zona;
     private HashMap<Enfermedad, Integer> enfermedadesYEnfermos;
+    public ArrayList<Brote> listaBrotes;
 
 
     public Encuentro(ArrayList<Ciudadano> invitados, Fecha fechaDesde, Fecha fechaHasta, String zona){
@@ -20,6 +21,7 @@ public class Encuentro implements RastreadorEnfermos{
         this.fechaDesde = fechaDesde;
         this.fechaHasta = fechaHasta;
         enfermedadesYEnfermos = new HashMap<>();
+        listaBrotes = new ArrayList<>();
     }
 
     public Encuentro crearEncuentro(SolicitudEncuentro unaSolicitud){
@@ -55,6 +57,7 @@ public class Encuentro implements RastreadorEnfermos{
         enfermedadesYEnfermos.clear();
         enfermedadesYEnfermos = getEnfermedadesParaBrotes();
         crearBrotesEnEncuentro(enfermedadesYEnfermos);
+
     }
 
 
@@ -112,9 +115,13 @@ public class Encuentro implements RastreadorEnfermos{
         for (Map.Entry<Enfermedad, Integer> entry : enfermedadesYEnfermos.entrySet()) {
             Enfermedad enfermedad = entry.getKey();
             Integer cantidad = entry.getValue();
-
-            new Brote(getZona(),getEnfermosEnEncuentro(enfermedad),cantidad,enfermedad.getNombre());
+            Brote unBrote = new Brote(getZona(),getEnfermosEnEncuentro(enfermedad),cantidad,enfermedad.getNombre());
+            listaBrotes.add(unBrote);
         }
+
     }
 
+    public ArrayList<Brote> getListaBrotes() {
+        return listaBrotes;
+    }
 }

@@ -1,4 +1,2 @@
 Nombre,Sintomas
 Covid, [fiebre,dolor de cabeza,tos]
-
-gripe, [tos, estornudos]

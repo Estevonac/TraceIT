@@ -118,12 +118,14 @@ public class Ciudadano implements RastreadorEnfermos {
     }
     //En el caso de que ya tenga el sintoma, se elimina el viejo y se anade el nuevo. Usamos esto para actualizar la fecha
     public void presenciaSintomas(String nuevoSintoma, Fecha fechaSintoma) throws IOException {
+        ArrayList<String> aRemover = new ArrayList<>();
         for (String sintomaYaPresente : sintomas){
             if (sintomaYaPresente.equals(nuevoSintoma)){
-                sintomas.remove(sintomaYaPresente);
-                sintomas.add(nuevoSintoma);
+                aRemover.add(sintomaYaPresente);
+                //sintomas.add(nuevoSintoma);
             }
         }
+        sintomas.removeAll(aRemover);
         sintomas.add(nuevoSintoma);
         evaluarSintomas();
         if (ultimoEncuentro != null) {

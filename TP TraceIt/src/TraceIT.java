@@ -462,9 +462,11 @@ public class TraceIT{
 
             if (respuesta2.equalsIgnoreCase("aceptar")){
                 ciudadanoVigente.aceptarSolicitud(emisor.getSolicitudEnviada());
+                pantallaCiudadano();
             }
             else if(respuesta2.equalsIgnoreCase("rechazar")){
                 ciudadanoVigente.rechazarSolicitud(emisor.getSolicitudEnviada());
+                pantallaCiudadano();
             }
             else {
                 System.out.println("La respuesta puede ser aceptar o rechazar. Proba nuevamente");

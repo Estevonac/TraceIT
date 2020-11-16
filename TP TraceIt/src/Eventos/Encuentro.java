@@ -37,12 +37,17 @@ public class Encuentro implements RastreadorEnfermos{
                 }
             }
             for (String sintoma : sintomasContacto) {//En un encuentro, una persona tiene un 60% de chance de contagiarse un sintoma de otro ciudadano
-                if ((Math.random() * 100) >= 20) { unCiudadano.presenciaSintomas(sintoma, getFechaHasta());}
+                if ((Math.random() * 100) >= 1) { unCiudadano.presenciaSintomas(sintoma, getFechaHasta());}
             }
             unCiudadano.evaluarSintomas();
 
             if (unCiudadano.estaEnfermo()){
-                enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(),enfermedadesYEnfermos.get(unCiudadano.getEnfermedadActual()) +1);
+                if (enfermedadesYEnfermos.containsKey(unCiudadano.getEnfermedadActual())) {
+                    enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(), enfermedadesYEnfermos.get(unCiudadano.getEnfermedadActual()) + 1);
+                }
+                else{
+                    enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(),1);
+                }
             }
         }
         ordenarEnfermedadesYEnfermos(); //Testear metodo

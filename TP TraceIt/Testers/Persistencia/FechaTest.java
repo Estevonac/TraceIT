@@ -28,7 +28,7 @@ public class FechaTest {
         int hora = Integer.parseInt(fecha.substring(6,8));
         int minuto = Integer.parseInt(fecha.substring(9));
 
-        Fecha unaFecha = new Fecha(dia,mes,hora,minuto); // Me elimina los 0 de enfrente. La fecha es la misma pero como esta el 0 no lo reconoce igual
+        Fecha unaFecha = new Fecha(dia,mes,hora,minuto);
         //assertEquals(fecha,unaFecha.getFechaAsString());
 
     }

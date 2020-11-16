@@ -1,13 +1,14 @@
 import ABM.ABM;
 import ABM.Administrador;
 import ABM.Ciudadano;
-import Eventos.*;
+import Eventos.Enfermedad;
+import Eventos.Ranking;
+import Eventos.SolicitudEncuentro;
 import Exceptions.IllegalConditionsException;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -18,7 +19,6 @@ public class TraceIT{
     static Administrador adminVigente;
     static Ciudadano ciudadanoVigente;
     static Ranking ranking;
-    static ArrayList<String> listaBrotes = new ArrayList<>();
     static {
         try {
             ranking = new Ranking();
@@ -40,7 +40,7 @@ public class TraceIT{
        //cargarBrotes();
     }
 
-    private static void cargarBrotes() throws IOException {
+    /*private static void cargarBrotes() throws IOException {
         FileReader fileReader = new FileReader("TP TraceIT/src/Datasets/Brotes.txt");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String head = bufferedReader.readLine();
@@ -51,7 +51,7 @@ public class TraceIT{
             listaBrotes.add(broteDatos[0] + ", " + broteDatos[1] + ", " + broteDatos[2]);
         }
         bufferedReader.close();
-    }
+    }*/
 
     private static void traceITinterfaz() throws IOException, InvalidDataException, IllegalConditionsException, InexistentUserException {
     Scanner input = new Scanner(System.in);
@@ -481,17 +481,19 @@ public class TraceIT{
         }
     }
 
-    static void mostrarBrotes(){
+    static void mostrarBrotes() throws IOException {
+
         System.out.println("Brotes: ");
         System.out.println("Enfermedad,  Zona,  Cantidad de enfermos");
-        if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
-            for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
-                System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
-            }
-        }
-        else{
-            System.out.println("No estuviste en un encuentro ultimamente o no surgio ningun brote de el");
-        }
+        //if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
+                ciudadanoVigente.ultimoEncuentro.leerBrotes();
+            //for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
+                //System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
+            //}
+       // }
+        //else{
+            //System.out.println("No estuviste en un encuentro ultimamente o no surgio ningun brote de el");
+        //}
     }
     private static void mostrarEnfermedadesVigentes() throws IOException {
         ArrayList<String> enfermedades = new ArrayList<>();

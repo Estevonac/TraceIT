@@ -2,11 +2,13 @@ package Eventos;
 
 import ABM.Ciudadano;
 import Persistencia.Fecha;
+import Persistencia.GestorDeArchivos;
+
 import java.io.IOException;
 import java.util.*;
 
 
-public class Encuentro implements RastreadorEnfermos{
+public class Encuentro implements RastreadorEnfermos, GestorDeArchivos {
 
     private final ArrayList<Ciudadano> invitados;
     private final Fecha fechaDesde, fechaHasta;
@@ -53,7 +55,7 @@ public class Encuentro implements RastreadorEnfermos{
                 }
             }
         }
-        ordenarEnfermedadesYEnfermos(); //Testear metodo
+        ordenarEnfermedadesYEnfermos();
         enfermedadesYEnfermos.clear();
         enfermedadesYEnfermos = getEnfermedadesParaBrotes();
         crearBrotesEnEncuentro(enfermedadesYEnfermos);
@@ -123,5 +125,8 @@ public class Encuentro implements RastreadorEnfermos{
 
     public ArrayList<Brote> getListaBrotes() {
         return listaBrotes;
+    }
+    public void leerBrotes() throws IOException {
+        leerArchivo("Brotes");
     }
 }

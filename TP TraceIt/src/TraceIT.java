@@ -486,7 +486,7 @@ public class TraceIT{
         System.out.println("Brotes: ");
         System.out.println("Enfermedad,  Zona,  Cantidad de enfermos");
         //if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
-                ciudadanoVigente.ultimoEncuentro.leerBrotes();
+                ciudadanoVigente.ultimoEncuentro.leerBrotes(); //Resolver que lea la lista desde el encuentro y no el archivo
             //for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
                 //System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
             //}

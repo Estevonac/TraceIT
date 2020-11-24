@@ -1,3 +1,2 @@
 Enfermedad,Zona,CantidadEnfermos
 gripe,Pilar,6
-

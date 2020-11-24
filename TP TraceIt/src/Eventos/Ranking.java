@@ -9,7 +9,7 @@ import static java.lang.Integer.parseInt;
 
 public class Ranking implements GestorDeArchivos {
 
-    HashMap<String, Integer> rankingZonasYEnfermos;
+    public HashMap<String, Integer> rankingZonasYEnfermos;
 
     // Este ranking relaciona la cantidad de enfermos por zona
     public Ranking() throws IOException { // lee el dataset de zonas que incluye contagios
@@ -18,13 +18,24 @@ public class Ranking implements GestorDeArchivos {
     }
 
 
-    public void anadirARanking(String zona, Integer cantidad) {
+    public void anadirARanking(String zona) {
         if (rankingZonasYEnfermos.containsKey(zona)) {
-            rankingZonasYEnfermos.put(zona,rankingZonasYEnfermos.get(zona) +1);
+            rankingZonasYEnfermos.put(zona,rankingZonasYEnfermos.get(zona) + 1);
         }
         else{
-            rankingZonasYEnfermos.put(zona, cantidad);
+            rankingZonasYEnfermos.put(zona,1);
         }
+    }
+    public void vaciarRanking() throws IOException {
+        rankingZonasYEnfermos.clear();
+        llenarRankingPorArchivo();
+    }
+
+    public void eliminarDeRanking(String zona, Integer cantidad){
+        rankingZonasYEnfermos.remove(zona);
+    }
+    public void restarUnoAZona(String zona){
+        rankingZonasYEnfermos.put(zona,rankingZonasYEnfermos.get(zona) - 1);
     }
 
     public void anadirHashmapARanking(HashMap<String, Integer> nuevoRanking){ rankingZonasYEnfermos = nuevoRanking; }

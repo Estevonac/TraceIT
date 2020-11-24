@@ -1,6 +1,7 @@
 import ABM.ABM;
 import ABM.Administrador;
 import ABM.Ciudadano;
+import Eventos.Brote;
 import Eventos.Enfermedad;
 import Eventos.Ranking;
 import Eventos.SolicitudEncuentro;
@@ -8,9 +9,9 @@ import Exceptions.IllegalConditionsException;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -269,16 +270,29 @@ public class TraceIT{
     }
 
     private static void verRanking() throws IOException, InvalidDataException, InexistentUserException, IllegalConditionsException {
+        for(Ciudadano unCiudadano : abm.getListaCiudadanosObj()){
+            if (unCiudadano.estaEnfermo()){
+                    ranking.anadirARanking(unCiudadano.getZona());
+                }
+            }
+        System.out.println("TOP 3\n");
+        System.out.println("Zona  " + "Cantidad de enfermos");
         if (ciudadanoVigente != null){
-            System.out.println(ranking.mostrarRankingMayorEnfermos());
+            for(Map.Entry<String, Integer> entry : ranking.mostrarRankingMayorEnfermos().entrySet()){
+                System.out.println( entry.getKey() + "  " + entry.getValue() );
+            }
+            System.out.println("----------------------");
+            ranking.vaciarRanking();
             pantallaCiudadano();
         }
         else{
-            System.out.println(ranking.mostrarRankingMayorEnfermos());
+            for(Map.Entry<String, Integer> entry : ranking.mostrarRankingMayorEnfermos().entrySet()){
+                System.out.println( entry.getKey() + "  " + entry.getValue() );
+            }
+            System.out.println("----------------------");
+            ranking.vaciarRanking();
             pantallaAdmin();
         }
-
-
     }
 
     private static void pantallaCiudadano() throws IOException, InexistentUserException, InvalidDataException, IllegalConditionsException {
@@ -370,9 +384,6 @@ public class TraceIT{
         String fecha = input.nextLine();
 
         ciudadanoVigente.presenciaSintomas(sintoma, toFecha(fecha));
-        if (ciudadanoVigente.estaEnfermo){
-            ranking.anadirARanking(ciudadanoVigente.getZona(),1);
-        }
     }
 
 
@@ -485,15 +496,15 @@ public class TraceIT{
 
         System.out.println("Brotes: ");
         System.out.println("Enfermedad,  Zona,  Cantidad de enfermos");
-        //if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
+        if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
                 ciudadanoVigente.ultimoEncuentro.leerBrotes(); //Resolver que lea la lista desde el encuentro y no el archivo
-            //for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
-                //System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
-            //}
-       // }
-        //else{
-            //System.out.println("No estuviste en un encuentro ultimamente o no surgio ningun brote de el");
-        //}
+            for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
+                System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
+            }
+        }
+        else{
+            System.out.println("No estuviste en un encuentro ultimamente o no surgio ningun brote de el");
+        }
     }
     private static void mostrarEnfermedadesVigentes() throws IOException {
         ArrayList<String> enfermedades = new ArrayList<>();

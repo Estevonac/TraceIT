@@ -40,9 +40,12 @@ public class Encuentro implements RastreadorEnfermos, GestorDeArchivos {
                     sintomasContacto.add(sintomaCiudadano);
                 }
             }
+        }
+        for (Ciudadano unCiudadano : getInvitados()){
             for (String sintoma : sintomasContacto) {//En un encuentro, una persona tiene un 60% de chance de contagiarse un sintoma de otro ciudadano
                 //if ((Math.random() * 100) >= 1) { unCiudadano.presenciaSintomas(sintoma, getFechaHasta());}
                 unCiudadano.presenciaSintomas(sintoma, getFechaHasta());
+
             }
             unCiudadano.evaluarSintomas();
 
@@ -54,6 +57,7 @@ public class Encuentro implements RastreadorEnfermos, GestorDeArchivos {
                     enfermedadesYEnfermos.put(unCiudadano.getEnfermedadActual(),1);
                 }
             }
+            unCiudadano.ultimoEncuentro = this; //Antes de terminarlo le asignamos este como ultimo encuentro para obtener los brotes despues
         }
         ordenarEnfermedadesYEnfermos();
         enfermedadesYEnfermos.clear();
@@ -113,7 +117,7 @@ public class Encuentro implements RastreadorEnfermos, GestorDeArchivos {
             }
         });
     }
-    private void crearBrotesEnEncuentro(HashMap<Enfermedad, Integer> enfermedadesYEnfermos) throws IOException {
+    public void crearBrotesEnEncuentro(HashMap<Enfermedad, Integer> enfermedadesYEnfermos) throws IOException {
         for (Map.Entry<Enfermedad, Integer> entry : enfermedadesYEnfermos.entrySet()) {
             Enfermedad enfermedad = entry.getKey();
             Integer cantidad = entry.getValue();
@@ -126,6 +130,7 @@ public class Encuentro implements RastreadorEnfermos, GestorDeArchivos {
     public ArrayList<Brote> getListaBrotes() {
         return listaBrotes;
     }
+
     public void leerBrotes() throws IOException {
         leerArchivo("Brotes");
     }

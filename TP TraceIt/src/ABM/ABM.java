@@ -102,6 +102,7 @@ public class ABM implements GestorDeArchivos {
         }
         return listaToString;
     }
+    public ArrayList<Ciudadano> getListaCiudadanosObj(){ return new ArrayList<>(listaCiudadanos); }
 
     public Ciudadano ciudadanoChequeo (String cuil, String telefono) throws IOException { //Chequear porque los devuelve null
 

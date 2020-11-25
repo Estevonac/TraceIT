@@ -59,9 +59,11 @@ public class Encuentro implements RastreadorEnfermos, GestorDeArchivos {
             }
             unCiudadano.ultimoEncuentro = this; //Antes de terminarlo le asignamos este como ultimo encuentro para obtener los brotes despues
         }
-        ordenarEnfermedadesYEnfermos();
-        enfermedadesYEnfermos.clear();
+
+
+        //enfermedadesYEnfermos.clear();
         enfermedadesYEnfermos = getEnfermedadesParaBrotes();
+        //ordenarEnfermedadesYEnfermos();
         crearBrotesEnEncuentro(enfermedadesYEnfermos);
 
     }

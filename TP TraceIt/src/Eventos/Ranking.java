@@ -1,11 +1,9 @@
 package Eventos;
 
 import Persistencia.GestorDeArchivos;
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.util.*;
-import static java.lang.Integer.parseInt;
 
 public class Ranking implements GestorDeArchivos {
 
@@ -14,7 +12,7 @@ public class Ranking implements GestorDeArchivos {
     // Este ranking relaciona la cantidad de enfermos por zona
     public Ranking() throws IOException { // lee el dataset de zonas que incluye contagios
         rankingZonasYEnfermos = new HashMap<>();
-        llenarRankingPorArchivo();
+        //llenarRankingPorArchivo();
     }
 
 
@@ -28,7 +26,7 @@ public class Ranking implements GestorDeArchivos {
     }
     public void vaciarRanking() throws IOException {
         rankingZonasYEnfermos.clear();
-        llenarRankingPorArchivo();
+        //llenarRankingPorArchivo();
     }
 
     public void eliminarDeRanking(String zona, Integer cantidad){
@@ -42,7 +40,7 @@ public class Ranking implements GestorDeArchivos {
 
     public void removerHashmapARanking(){rankingZonasYEnfermos.clear();}
 
-    public void llenarRankingPorArchivo() throws IOException { //Lee el archivo y lo llena desde el archivo
+    /*public void llenarRankingPorArchivo() throws IOException { //Lee el archivo y lo llena desde el archivo
         FileReader fileReader = new FileReader(getRuta("ZonasContagiadas"));
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String head = bufferedReader.readLine();
@@ -53,44 +51,21 @@ public class Ranking implements GestorDeArchivos {
             rankingZonasYEnfermos.put(dato[0],parseInt(dato[1]));
         }
         bufferedReader.close();
-    }
+    }*/ //Tengo que mejorar el format para que funcione. Separar bien el hash
 
-    public void sortMayorEnfermos() throws IOException { // Implementar sorts
+    public void sortMayorEnfermos() throws IOException {
 
-        Object[] array = rankingZonasYEnfermos.entrySet().toArray();
-        Arrays.sort(array, new Comparator() {
-            public int compare(Object o1, Object o2) {
-                return ((Map.Entry<String, Integer>) o2).getValue()
-                        .compareTo(((Map.Entry<String, Integer>) o1).getValue());
-            }
-        });
-        editarArchivo("ZonasContagiadas", rankingZonasYEnfermos.toString(),getRankingZonasYEnfermos().toString());
-    }
-    public void sortMenorEnfermos() throws IOException {
+        List<Map.Entry<String, Integer> > list =
+                new LinkedList<>(rankingZonasYEnfermos.entrySet());
 
-        Object[] array = rankingZonasYEnfermos.entrySet().toArray();
-        Arrays.sort(array, new Comparator() {
-            public int compare(Object o1, Object o2) {
-                return ((Map.Entry<String, Integer>) o1).getValue()
-                        .compareTo(((Map.Entry<String, Integer>) o2).getValue());
-            }
-        });
-        editarArchivo("ZonasContagiadas", rankingZonasYEnfermos.toString(),getRankingZonasYEnfermos().toString());
-    }
+        list.sort((o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
-    public HashMap<String, Integer> mostrarRankingMenorEnfermos() throws IOException {
-
-        HashMap<String, Integer> top3 = new HashMap<>();
-
-        for (String zonaID : rankingZonasYEnfermos.keySet()){
-            if (top3.size()<3){
-                top3.put(zonaID,rankingZonasYEnfermos.get(zonaID));
-            }
+        rankingZonasYEnfermos.clear();
+        HashMap<String, Integer> temp = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
         }
-        removerHashmapARanking();
-        anadirHashmapARanking(top3);
-        sortMenorEnfermos();
-        return top3;
+        rankingZonasYEnfermos = temp;
     }
     //Mostrar solo el top 3
     public HashMap<String, Integer> mostrarRankingMayorEnfermos() throws IOException { // muestra la zona con mayor cantidad de contagios
@@ -101,11 +76,10 @@ public class Ranking implements GestorDeArchivos {
                 top3.put(zonaID,rankingZonasYEnfermos.get(zonaID));
             }
         }
-        removerHashmapARanking();
+        vaciarRanking();
         anadirHashmapARanking(top3);
         sortMayorEnfermos();
         return top3;
-
     }
     public HashMap<String, Integer> getRankingZonasYEnfermos() { return rankingZonasYEnfermos; }
 }

@@ -1,7 +1,6 @@
 import ABM.ABM;
 import ABM.Administrador;
 import ABM.Ciudadano;
-import Eventos.Brote;
 import Eventos.Enfermedad;
 import Eventos.Ranking;
 import Eventos.SolicitudEncuentro;
@@ -9,6 +8,7 @@ import Exceptions.IllegalConditionsException;
 import Exceptions.InexistentUserException;
 import Exceptions.InvalidDataException;
 import Persistencia.Fecha;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -278,7 +278,8 @@ public class TraceIT{
         System.out.println("TOP 3\n");
         System.out.println("Zona  " + "Cantidad de enfermos");
         if (ciudadanoVigente != null){
-            for(Map.Entry<String, Integer> entry : ranking.mostrarRankingMayorEnfermos().entrySet()){
+            ranking.sortMayorEnfermos();
+            for(Map.Entry<String, Integer> entry : ranking.getRankingZonasYEnfermos().entrySet()){ //mostrarRankingMayorEnfermos()
                 System.out.println( entry.getKey() + "  " + entry.getValue() );
             }
             System.out.println("----------------------");
@@ -343,9 +344,10 @@ public class TraceIT{
                 }
                 case 6 -> {
                     clearScreen();
-                    ciudadanoVigente.empezarEncuentro();
-                    System.out.println("Evento simulado con exito");
-                    pantallaCiudadano();
+                        ciudadanoVigente.empezarEncuentro();
+                        System.out.println("Evento simulado con exito");
+                        pantallaCiudadano();
+
                     return;
                 }
                 case 7 -> {
@@ -496,11 +498,8 @@ public class TraceIT{
 
         System.out.println("Brotes: ");
         System.out.println("Enfermedad,  Zona,  Cantidad de enfermos");
-        if (!ciudadanoVigente.ultimoEncuentro.getListaBrotes().isEmpty()) {
+        if (ciudadanoVigente.ultimoEncuentro != null) {
                 ciudadanoVigente.ultimoEncuentro.leerBrotes(); //Resolver que lea la lista desde el encuentro y no el archivo
-            for (Brote unBrote : ciudadanoVigente.ultimoEncuentro.getListaBrotes()) {
-                System.out.println(unBrote.getEnfermedad() + ", " + unBrote.getZona() + ", " + unBrote.getCantidadEnfermos());
-            }
         }
         else{
             System.out.println("No estuviste en un encuentro ultimamente o no surgio ningun brote de el");

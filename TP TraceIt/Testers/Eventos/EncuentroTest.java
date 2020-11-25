@@ -63,7 +63,7 @@ public class EncuentroTest {
         for (Ciudadano unCiudadano : invitados){
             assertTrue(unCiudadano.estaEnfermo); //Todos deben estar enfermos
         }
-        //assertEquals(unEncuentro.listaBrotes.size(),1);
+        assertEquals(unEncuentro.listaBrotes.size(),1); // El brote de 6 personas por gripe en pilar
     }
 
 }

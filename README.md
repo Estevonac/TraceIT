@@ -5,9 +5,6 @@ Introducción a la Programación II
 Trabajo Práctico Especial
 2do Cuatrimestre 2020
  Equipo:
-        Elio Molas
-        Tais Marambio
-        Agustin Bazan
         Ignacio Estevo
         
 <h1>Diseño </h1>
